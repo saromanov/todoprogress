@@ -1,0 +1,19 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% block content %}
+<div class="container">
+  <h1>Smart TODO monitor</h1>
+
+  {{ thisdate }}
+  <h2>Add new task</h2>
+  {{ wtf.quick_form(form, method="post")}}
+
+</div>
+
+{% endblock %}
+
+{% block head %}
+{{super()}}
+{% endblock %}
