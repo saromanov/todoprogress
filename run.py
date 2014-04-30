@@ -7,6 +7,7 @@ from wtforms import TextField, HiddenField, ValidationError, RadioField,\
     BooleanField, SubmitField, IntegerField, FormField, validators
 from wtforms.validators import Required, DataRequired
 
+
 from pymongo import MongoClient
 
 #from gevent import pywsgi, socket
@@ -25,12 +26,13 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 
 mongo = MongoClient()
-db = mongo["todo_db"]["todo_db"]
-
+db = mongo.todo_db
+tasks = db.tasks
+#app.session_interface = MongoEngineSessionInterface(db)
 class TodoForm(Form):
 	tf = TextField("Task", validators=[DataRequired()])
 	descr = TextField("Desription", validators=[DataRequired()])
-	mark = IntegerField("Your mark for this task", validators=[DataRequired()])
+	your_mark = IntegerField("Your mark for this task", validators=[DataRequired()])
 	#List
 	type_task = TextField("Type of your task", validators=[DataRequired()])
 	submit = SubmitField("Send")
@@ -39,12 +41,17 @@ class TodoForm(Form):
 def main():
 	form = TodoForm()
 	if request.method == 'POST':
-		db.insert({'task': request.form["tf"],\
-			'mark':request.form["mark"],\
+		tasks.insert({'task': request.form["tf"],\
+			'mark':request.form["your_mark"],\
 			'type':request.form["type_task"],\
-			'description': request.form["description"]})
-		return "Was added"
+			'description': request.form["descr"],\
+			"date": datetime.datetime.utcnow()})
+		redirect('done')
 	return render_template("index.html", form=form, thisdate=datetime.datetime.now())
+
+@app.route("/list", methods=("GET", "POST"))
+def show_list():
+	return render_template("list.html", tasks=list(tasks.find()))
 
 
 if __name__ == '__main__':
