@@ -1,4 +1,4 @@
-from sklearn import linear_model, SGDClassifer
+from sklearn import linear_model
 from sklearn.neighbors.nearest_centroid import NearestCentroid
 import numpy as np
 import json
@@ -28,5 +28,10 @@ def task_clustering(X, y, pred_value):
 	return NearestCentroid()\
 		   .fit(X, y)\
 		   .predict(pred_value)
+
+
+#Predict on succes or failure of task
+def predict_success(X, y, pred_value, threshold):
+	True if Regression(X, y, pred_value) >= threshold else False
 
 
