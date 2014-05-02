@@ -7,9 +7,16 @@
   <h1>Smart TODO monitor</h1>
 
   {{ thisdate }}
+ <form action="" method="post" name="todoform">
   <h2>Add new task</h2>
-  {{ wtf.quick_form(form, method="post")}}
-
+   {{ form.tf(size=50) }}
+  <h2>Description </h2>
+   {{ form.descr(size=50) }}
+  <h2> Type of task</h2>
+   {{ form.type_of_task }}
+  <br><br>
+   {{ form.submit }}
+</form>
 </div>
 
 {% endblock %}
