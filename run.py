@@ -37,6 +37,7 @@ class TodoForm(Form):
 	mark = IntegerField("Your mark", validators=[DataRequired()])
 	iscomplete = SelectField("This task is complete?", choices=(("yes", "Yes"),\
 		("no", "No")))
+	tags = TextField("Tags")
 	submit = SubmitField("Add")
 
 
@@ -48,13 +49,16 @@ def main():
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
+		dir_tags = request.form["tags"]
+		tags = dir_tags.split(',') if len(dir_tags) > 0 else None
 		tasks.insert({
 			'task': request.form["tf"],\
 			'marks':request.form["mark"],\
 			'type':request.form["type_of_task"],\
 			'description': request.form["descr"],\
-			"date": datetime.datetime.utcnow(),\
-			'complete': request.form["iscomplete"]})
+			'date': datetime.datetime.utcnow(),\
+			'complete': request.form["iscomplete"],\
+			'tags': tags})
 
 		'''return render_template("index.html", form=form, sf=sf, pred = pr,\
 		thisdate=datetime.datetime.now(),\
