@@ -10,6 +10,7 @@ from wtforms.validators import Required, DataRequired
 from pymongo import MongoClient
 
 from learning import predict_success
+from db import DB
 
 import random
 import os
@@ -26,6 +27,7 @@ app.config.from_object(__name__)
 mongo = MongoClient()
 db = mongo.todo_db
 tasks = db.tasks
+dbdata = DB(tasks)
 #app.session_interface = MongoEngineSessionInterface(db)
 class TodoForm(Form):
 	tf = TextField("Task", validators=[DataRequired()])
@@ -49,24 +51,15 @@ def main():
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
-		dir_tags = request.form["tags"]
-		tags = dir_tags.split(',') if len(dir_tags) > 0 else None
-		tasks.insert({
-			'task': request.form["tf"],\
-			'marks':request.form["mark"],\
-			'type':request.form["type_of_task"],\
-			'description': request.form["descr"],\
-			'date': datetime.datetime.utcnow(),\
-			'complete': request.form["iscomplete"],\
-			'tags': tags})
-
+		dbdata.addTask(request)
 		'''return render_template("index.html", form=form, sf=sf, pred = pr,\
 		thisdate=datetime.datetime.now(),\
 		tasks=list(tasks.find()), score=predict_success(X, y, pred_value, threshold)'''
 		redirect('done')
 	return render_template("index.html", form=form, sf=sf,\
 		thisdate=datetime.datetime.now(),\
-		tasks=list(tasks.find()))
+		tasks=list(filter(lambda x: x['task'] if 'complete' not in x or \
+			x['complete'] == 0 else None, dbdata.tasks())))
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
