@@ -3,16 +3,14 @@ import sqlite3
 from contextlib import closing
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, RecaptchaField
-from wtforms import TextField, HiddenField, ValidationError, RadioField,\
-    BooleanField, SubmitField, IntegerField, FormField, validators
+from wtforms import TextField, HiddenField, ValidationError,\
+ SubmitField, IntegerField, FormField, TextAreaField, SelectField, validators
 from wtforms.validators import Required, DataRequired
-
 
 from pymongo import MongoClient
 
-#from gevent import pywsgi, socket
-#from geventwebsocket.handler import WebSocketHandler
-#from flask.ext.sqlalchemy import SQLAlchemy
+from learning import predict_success
+
 import random
 import os
 import datetime
@@ -32,28 +30,50 @@ tasks = db.tasks
 class TodoForm(Form):
 	tf = TextField("Task", validators=[DataRequired()])
 	descr = TextField("Desription", validators=[DataRequired()])
-	your_mark = IntegerField("Your mark for this task", validators=[DataRequired()])
-	#List
-	type_task = TextField("Type of your task", validators=[DataRequired()])
-	submit = SubmitField("Send")
+	type_of_task = SelectField("Type of task", choices=(("study", "study"), \
+		("read", "read"), \
+		("fun", "fun"),
+		("work", "work")))
+	mark = IntegerField("Your mark", validators=[DataRequired()])
+	iscomplete = SelectField("This task is complete?", choices=(("yes", "Yes"),\
+		("no", "No")))
+	submit = SubmitField("Add")
+
+
+class SearchForm(Form):
+	search = TextField("search", validators=[DataRequired()])
 
 @app.route("/", methods=("GET", "POST"))
 def main():
 	form = TodoForm()
+	sf = SearchForm()
 	if request.method == 'POST':
-		tasks.insert({'task': request.form["tf"],\
-			'mark':request.form["your_mark"],\
-			'type':request.form["type_task"],\
+		tasks.insert({
+			'task': request.form["tf"],\
+			'marks':request.form["mark"],\
+			'type':request.form["type_of_task"],\
 			'description': request.form["descr"],\
-			"date": datetime.datetime.utcnow()})
+			"date": datetime.datetime.utcnow(),\
+			'complete': request.form["iscomplete"]})
+
+		'''return render_template("index.html", form=form, sf=sf, pred = pr,\
+		thisdate=datetime.datetime.now(),\
+		tasks=list(tasks.find()), score=predict_success(X, y, pred_value, threshold)'''
 		redirect('done')
-	return render_template("index.html", form=form, thisdate=datetime.datetime.now())
+	return render_template("index.html", form=form, sf=sf,\
+		thisdate=datetime.datetime.now(),\
+		tasks=list(tasks.find()))
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
-	return render_template("list.html", tasks=list(tasks.find()))
+	dtasks = list(tasks.find())
+	size = len(dtasks)
+	return render_template("list.html", tasks=zip(dtasks, list(range(size))))
 
 
+
+#TODO добавить отдельно базу для выполненных и текущих задач
+#Предсказание оптимального времени выполнения задач
 if __name__ == '__main__':
 	Bootstrap(app)
 	app.run()

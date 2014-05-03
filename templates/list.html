@@ -2,12 +2,28 @@
 {% import "bootstrap/wtf.html" as wtf %}
 {% import "bootstrap/fixes.html" as fixes %}
 
+
 {% block content %}
+<ul class="nav nav-list">
+ <li class="active"><a href="/"><i class="icon-home icon-white"></i> Главная</a></li>
+ <li><a href="#"><i class="icon-book"></i> График</a></li>
+</ul>
 <div class="container">
   <h1> Your current tasks </h1>
-  {% for task in tasks %}
-  	<h2> {{task.task}} </h2>
-  {% endfor %}
+  <ul>
+    {% for (task, value) in tasks %}
+    {% if task.complete == "yes" %} 
+    	<span style="color: red;">
+        	<li>{{ task.task }} </li>
+        </span>
+    {% else %}
+    	<span style="color: blue;">
+    		<li> {{ task.task }}</li>
+    		<p> Prediction score: {{ value }} </p>
+    	</span>
+    {% endif %}
+    {% endfor %}
+    </ul>
 
 </div>
 

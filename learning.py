@@ -24,14 +24,14 @@ def prepareData(datajson, fields, param):
 		for f in fields:
 			temp.append(data[f])
 		X.append(temp)
-		y.append(data[params])
+		y.append(data[param])
 	return X,y
 
 
 #Split data on test set and train set
 
 def Regression(X, y, pred_value):
-	regr = linear_model.BayesianRidge()\
+	regr = linear_model.LogisticRegression()\
 			.fit(X, y)\
 			.predict(pred_value)
 
@@ -47,7 +47,5 @@ def task_clustering(X, y, pred_value):
 def predict_success(X, y, pred_value, threshold):
 	True if Regression(X, y, pred_value) >= threshold else False
 
-
-prepareData(loadData("../task_data.json"), ["time", "value"], "result")
 
 

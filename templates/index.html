@@ -3,9 +3,15 @@
 {% import "bootstrap/fixes.html" as fixes %}
 
 {% block content %}
-<div class="container">
-  <h1>Smart TODO monitor</h1>
 
+<ul class="nav nav-list">
+ <li class="active"><a href="/list"><i class="icon-home icon-white"></i> Список задач</a></li>
+ <li><a href="#"><i class="icon-book"></i> График</a></li>
+</ul>
+<div class="container-fluid">
+  <h1>Smart TODO monitor</h1>
+  <div class="row-fluid">
+   <div class="span2">
   {{ thisdate }}
  <form action="" method="post" name="todoform">
   <h2>Add new task</h2>
@@ -14,12 +20,37 @@
    {{ form.descr(size=50) }}
   <h2> Type of task</h2>
    {{ form.type_of_task }}
+
+  <h2> Your mark after task </h2>
+   {{form.mark }}
+   <h2>This task is completed? </h2>
+   {{ form.iscomplete }}
   <br><br>
-   {{ form.submit }}
+  <p><input type="submit" value="Add"></p>
+  </div>
+ 	<p> Your prediction score: {{ score }}</p>
+  </div>
+  </div>
 </form>
 </div>
 
+<table>
+<tr class="success">
+	<td>1</td>
+	<td>TB - Monthly</td>
+	<td>01/04/2012</td>
+	<td>Approved</td>
+</tr>
+<tr class="success">
+	<td>1</td>
+	<td>TB - Monthly</td>
+	<td>01/04/2012</td>
+	<td>Approved</td>
+</tr>
+</table>
+
 {% endblock %}
+
 
 {% block head %}
 {{super()}}
