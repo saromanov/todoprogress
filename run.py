@@ -31,12 +31,12 @@ dbdata = DB(tasks)
 #app.session_interface = MongoEngineSessionInterface(db)
 class TodoForm(Form):
 	tf = TextField("Task", validators=[DataRequired()])
-	descr = TextField("Desription", validators=[DataRequired()])
+	descr = TextField("Desription")
 	type_of_task = SelectField("Type of task", choices=(("study", "study"), \
 		("read", "read"), \
 		("fun", "fun"),
 		("work", "work")))
-	mark = IntegerField("Your mark", validators=[DataRequired()])
+	mark = IntegerField("Your mark")
 	iscomplete = SelectField("This task is complete?", choices=(("yes", "Yes"),\
 		("no", "No")))
 	tags = TextField("Tags")
@@ -52,14 +52,9 @@ def main():
 	sf = SearchForm()
 	if request.method == 'POST':
 		dbdata.addTask(request)
-		'''return render_template("index.html", form=form, sf=sf, pred = pr,\
-		thisdate=datetime.datetime.now(),\
-		tasks=list(tasks.find()), score=predict_success(X, y, pred_value, threshold)'''
 		redirect('done')
-	return render_template("index.html", form=form, sf=sf,\
-		thisdate=datetime.datetime.now(),\
-		tasks=list(filter(lambda x: x['task'] if 'complete' not in x or \
-			x['complete'] == 0 else None, dbdata.tasks())))
+	return render_template("index.html", form=form, sf=sf,
+		thisdate=datetime.datetime.now(),tasks=dbdata.tasks())
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():

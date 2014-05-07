@@ -12,14 +12,17 @@
   <h1>Smart TODO monitor</h1>
   <div class="row-fluid">
   <div class="pull-right">
-  <h2> Current tasks in progess </h2>
-  {% for task in tasks %}
-  	<label class="checkbox inline">
-		<input type="checkbox" value="{{ task.task }}"> {{ task.task }}
-	</label>
-  {% endfor %}
-  </div>
-   <div class="span2">
+  <form action="" method="post" name="progresstask"
+    <h2> Current tasks in progess </h2>
+    {% for task in tasks %}
+  	 <label class="checkbox inline">
+		  <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task }}
+	   </label>
+    {% endfor %}
+    <input type="submit" value="Remove tasks" class="btn btn-large btn-primary"></p>
+    </div>
+  </form>
+    <div class="span2">
   {{ thisdate }}
 
 
