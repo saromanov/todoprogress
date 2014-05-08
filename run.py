@@ -41,6 +41,9 @@ class TodoForm(Form):
 	#	("no", "No"),
 	#	("yes", "Yes")))
 	tags = TextField("Tags")
+
+	#Think about better solution
+	deadline = IntegerField("Deadline")
 	submit = SubmitField("Add")
 
 
@@ -59,7 +62,7 @@ def main():
 				message="Задача добавлена в список",\
 				value="alert alert-success")
 		else:
-			#dbdata.removeTasks(request.form)
+			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
 				value="alert alert-success", message=\
