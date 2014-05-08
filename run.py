@@ -5,7 +5,7 @@ from flask_bootstrap import Bootstrap
 from flask_wtf import Form, RecaptchaField
 from wtforms import TextField, HiddenField, ValidationError,\
  SubmitField, IntegerField, FormField, TextAreaField, SelectField, validators
-from wtforms.validators import Required, DataRequired
+from wtforms.validators import Required, DataRequired, InputRequired
 
 from pymongo import MongoClient
 
@@ -27,7 +27,8 @@ app.config.from_object(__name__)
 mongo = MongoClient()
 db = mongo.todo_db
 tasks = db.tasks
-dbdata = DB(tasks)
+trash = db.trash
+dbdata = DB(tasks, trash)
 #app.session_interface = MongoEngineSessionInterface(db)
 class TodoForm(Form):
 	tf = TextField("Task", validators=[DataRequired()])
@@ -51,16 +52,22 @@ def main():
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
-		dbdata.addTask(request)
-		redirect('done')
+		#dbdata.addTask(request)
+		dbdata.removeTasks(request.form)
+		return render_template("index.html", form=form, \
+			thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
+			value="alert alert-success", message=\
+			"Задачи удалены, но их можно восстановить")
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks())
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
-	dtasks = list(tasks.find())
+	dtasks = dbdata.tasks()
 	size = len(dtasks)
-	return render_template("list.html", tasks=zip(dtasks, list(range(size))))
+	rem_size = len(dbdata.fromTrash())
+	return render_template("list.html", tasks=zip(dtasks, list(range(size))),\
+		trash=zip(dbdata.fromTrash(), list(range(rem_size))))
 
 
 

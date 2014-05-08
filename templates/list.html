@@ -22,6 +22,14 @@
     		<p> Prediction score: {{ value }} </p>
     	</span>
     {% endif %}
+
+    {% endfor %}
+
+    {% for (task, value) in trash %}
+        <span style="color: black;">
+            <li> {{ task.task }}</li>
+            <p> Prediction score: {{ value }} </p>
+        </span>
     {% endfor %}
     </ul>
 
