@@ -15,12 +15,18 @@ class DB:
 		tags = dir_tags.split(',') if len(dir_tags) > 0 else None
 		self._dbdata.insert({
 			'task': request.form["tf"],\
-			'marks':request.form["mark"],\
 			'type':request.form["type_of_task"],\
 			'description': request.form["descr"],\
 			'date': datetime.datetime.utcnow(),\
-			'complete': 0 if request.form["iscomplete"] == "no" else 1,\
 			'tags': tags})
+
+	def appendData(self, taskname, field, value):
+		'''
+		 	append data for task
+		'''
+		task = self._dbdata.find({name: taskname})
+		if len(task) > 0:
+			self._dbdata.update({name: taskname, field: value})
 
 	def tasks(self):
 		return list(self._dbdata.find())
@@ -46,5 +52,8 @@ class DB:
 		self._trash.insert(tasksdata)
 
 	def fromTrash(self):
-		print('COLL: ', self._trash)
 		return list(self._trash.find())
+
+	def loadTrainData(self, traindb):
+		return list(traindb.find())
+

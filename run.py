@@ -29,17 +29,17 @@ db = mongo.todo_db
 tasks = db.tasks
 trash = db.trash
 dbdata = DB(tasks, trash)
-#app.session_interface = MongoEngineSessionInterface(db)
 class TodoForm(Form):
-	tf = TextField("Task", validators=[DataRequired()])
+	tf = TextField("Task", [DataRequired("Enter your task")])
 	descr = TextField("Desription")
 	type_of_task = SelectField("Type of task", choices=(("study", "study"), \
 		("read", "read"), \
 		("fun", "fun"),
 		("work", "work")))
-	mark = IntegerField("Your mark")
-	iscomplete = SelectField("This task is complete?", choices=(("yes", "Yes"),\
-		("no", "No")))
+	#mark = IntegerField("Your mark")
+	#iscomplete = SelectField("This task is complete?", choices=(\
+	#	("no", "No"),
+	#	("yes", "Yes")))
 	tags = TextField("Tags")
 	submit = SubmitField("Add")
 
@@ -52,12 +52,18 @@ def main():
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
-		#dbdata.addTask(request)
-		dbdata.removeTasks(request.form)
-		return render_template("index.html", form=form, \
-			thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
-			value="alert alert-success", message=\
-			"Задачи удалены, но их можно восстановить")
+		if len(form.tf.data) != 0:
+			dbdata.addTask(request)
+			return render_template("index.html", form=form, sf=sf,
+				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
+				message="Задача добавлена в список",\
+				value="alert alert-success")
+		else:
+			#dbdata.removeTasks(request.form)
+			return render_template("index.html", form=form, \
+				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
+				value="alert alert-success", message=\
+				"Задачи удалены, но их можно восстановить")
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks())
 

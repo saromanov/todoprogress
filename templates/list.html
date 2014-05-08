@@ -19,16 +19,17 @@
     {% else %}
     	<span style="color: blue;">
     		<li> {{ task.task }}</li>
+            <p> Description: {{ task.description }} </p>
     		<p> Prediction score: {{ value }} </p>
     	</span>
     {% endif %}
 
     {% endfor %}
 
+    <h3> Tasks from trash </h3>
     {% for (task, value) in trash %}
         <span style="color: black;">
             <li> {{ task.task }}</li>
-            <p> Prediction score: {{ value }} </p>
         </span>
     {% endfor %}
     </ul>
