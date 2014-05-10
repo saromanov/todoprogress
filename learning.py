@@ -2,6 +2,7 @@ from sklearn import linear_model
 from sklearn.neighbors.nearest_centroid import NearestCentroid
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.feature_selection import SelectKBest
+from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 import numpy as np
 import json
 import os
@@ -62,16 +63,39 @@ def find_similar_tasks(X, y):
 	clear = [i[0] for i in X]
 	vect = CountVectorizer()
 	vmatrix = vect.fit_transform(clear)
-	#print(vmatrix)
+
 	tfifd = TfidfVectorizer(stop_words="english")
 	X_train = tfifd.fit_transform(clear)
 	ch = SelectKBest()
 	result = ch.fit_transform(X_train, y)
 	return ch.fit_transform(X_train, y)
 
+def gaussianPredict(cand):
+	'''
+	 	X, y = prepareData(data, ["starttime", "time", "type"], "complete")
+	 	gaussianPredict(X, y, [2, 100, 2])
+	 '''
+	data = loadData("../task_data.json")
+	data,target = prepareData(data, ["starttime", "time", "type"], "complete")
+	funcs = [GaussianNB, MultinomialNB, BernoulliNB]
+	minmissing = 99999999
+	resultNB = None
+	for nNB in funcs:
+		bayes = nNB()
+		fitting = bayes.fit(data, target)
+		pred = fitting.predict(data)
+		missing = (target != pred).sum()
+		if missing < minmissing:
+			minmissing = missing
+			resultNB = fitting
+	return resultNB.predict(cand)[0]
 
-X,y = prepareData(loadData("../task_data.json"), ['task'], 'complete')
-find_similar_tasks(X, y)
+#TODO, make function for recommendation for better task on this time
+
+
+#data = loadData("../task_data.json")
+#X,y = prepareData(data, ["starttime", "time", "type"], "complete")
+#print(gaussianPredict(X, y, [2, 100, 2]))
 
 
 
