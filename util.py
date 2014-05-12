@@ -1,4 +1,5 @@
 import datetime
+from time import mktime, time
 
 #Some helpful functions
 
@@ -44,6 +45,16 @@ def typeToNumber(value):
 		return 3
 	if value == "programming":
 		return 4
+
+
+def checkDeadline(data):
+	'''
+		Check how much time is left to deadline
+		data - "2014-05-09 07:37:50"
+	'''
+	value = time.strptime(data, "%Y-%m-%d %H:%M:%S")
+	dt = datetime.datetime.fromtimestamp(mktime(value))
+	return dt - datetime.datetime.now()
 
 
 
