@@ -114,11 +114,25 @@ def findOptimalTime(fields, target, cand):
 			return f
 
 
+def estimateTrainingData(data, fields, values, avalues, cand):
+	'''
+		data - training data loaded from db
+		Estimate amount on training data
+	'''
+	data,target = prepareData(data, fields, cand)
+	start_predict = gaussianPredict(fields, values, cand)
+	for i in range(10):
+		data.append(avalues)
+
+
+
+
+
 
 #TODO, make function for recommendation for better task on this time
-
-#result = findOptimalTime(["starttime", "time", "type"], [100, 2], "complete")
-#print(result)
+data = loadData("../task_data.json")
+estimateTrainingData(data, ["starttime", "time", "type"], [0,300,2], [1,300,1], "complete")
+#result = findOptimalTime(["starttime", "time", "type"], [300, 2], "complete")
 
 
 

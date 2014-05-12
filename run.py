@@ -58,17 +58,18 @@ def main():
 	sf = SearchForm()
 	if request.method == 'POST':
 		if len(form.tf.data) != 0:
-			dbdata.addTask(request)
+			#dbdata.addTask(request)
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
-			result = gaussianPredict(targetFields, "complete", \
-				[typeToNumber(request.form["type_of_task"]), int(request.form["deadline"]),\
-				timeToNumber()])
+			result = gaussianPredict(targetFields, \
+				[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"]),\
+				timeToNumber()], "complete")
 			if result == 0:
 				alert = "alert alert-success"
+				#print('PERDACHA: ', [typeToNumber(request.form["type_of_task"]), int(request.form["deadline"]) * 60])
 				rec_time = findOptimalTime(targetFields, \
-					[typeToNumber(request.form["type_of_task"]), int(request.form["deadline"]) * 60],
+					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
 					"complete")
 				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
 			return render_template("index.html", form=form, sf=sf,
