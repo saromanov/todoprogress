@@ -81,6 +81,28 @@ def find_similar_tasks(X, y):
 	result = ch.fit_transform(X_train, y)
 	return ch.fit_transform(X_train, y)
 
+def find_similar_names(data, target):
+	'''
+		Get most similar names on current task from db
+	'''
+	results = []
+	maxdiff = 0
+	splitter = target.lower().split()
+	for w in data.keys():
+		value = data[w]['task'].lower().split()
+		print(value)
+		result = value + splitter
+		old = len(result)
+		diff = old - len(set(result))
+		if diff > maxdiff:
+			maxdiff = diff
+			results = []
+			results.append(data[w])
+		if maxdiff != 0 and diff == maxdiff:
+			results.append(data[w])
+	return results
+
+
 
 def gaussianPredict(fields, target_data, cand):
 	'''
@@ -126,14 +148,9 @@ def estimateTrainingData(data, fields, values, avalues, cand):
 
 
 
-
-
-
 #TODO, make function for recommendation for better task on this time
+
 data = loadData("../task_data.json")
-estimateTrainingData(data, ["starttime", "time", "type"], [0,300,2], [1,300,1], "complete")
-#result = findOptimalTime(["starttime", "time", "type"], [300, 2], "complete")
-
-
+print(find_similar_names(data, 'Want to sleep'))
 
 
