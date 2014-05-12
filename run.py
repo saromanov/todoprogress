@@ -9,7 +9,8 @@ from wtforms.validators import Required, DataRequired, InputRequired
 
 from pymongo import MongoClient
 
-from learning import predict_success
+from learning import predict_success, gaussianPredict, getData
+from util import *
 from db import DB
 
 import random
@@ -35,7 +36,8 @@ class TodoForm(Form):
 	type_of_task = SelectField("Type of task", choices=(("study", "study"), \
 		("read", "read"), \
 		("fun", "fun"),
-		("work", "work")))
+		("work", "work"),
+		("programming", "programming")))
 	#mark = IntegerField("Your mark")
 	#iscomplete = SelectField("This task is complete?", choices=(\
 	#	("no", "No"),
@@ -57,10 +59,19 @@ def main():
 	if request.method == 'POST':
 		if len(form.tf.data) != 0:
 			dbdata.addTask(request)
+			alert = "alert alert-success"
+			message = "Задача добавлена в список"
+			targetFields = ["starttime", "time", "type"]
+			result = gaussianPredict(targetFields, "complete", \
+				[typeToNumber(request.form["type_of_task"]), int(request.form["deadline"]),\
+				timeToNumber()])
+			if result == 0:
+				alert = "alert alert-success"
+				message = RECOMMEND_MESSAGE
 			return render_template("index.html", form=form, sf=sf,
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
-				message="Задача добавлена в список",\
-				value="alert alert-success")
+				message=message,\
+				value=alert)
 		else:
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \

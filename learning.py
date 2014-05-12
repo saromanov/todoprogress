@@ -32,6 +32,17 @@ def prepareData(datajson, fields, param=None):
 	return X,y
 
 
+def getData(request, fields):
+	'''
+		Clean and get data from task form
+	'''
+	result =[]
+	for f in fields:
+		if request[f] != None:
+			print(type(request[f]))
+			result.append(request[f])
+	return result
+
 #Split data on test set and train set
 
 def Regression(X, y, pred_value):
@@ -70,8 +81,10 @@ def find_similar_tasks(X, y):
 	result = ch.fit_transform(X_train, y)
 	return ch.fit_transform(X_train, y)
 
-def gaussianPredict(cand):
+
+def gaussianPredict(fields, target, cand):
 	'''
+		Predict for complete of current task
 	 	X, y = prepareData(data, ["starttime", "time", "type"], "complete")
 	 	gaussianPredict(X, y, [2, 100, 2])
 	 '''
