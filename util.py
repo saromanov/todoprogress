@@ -3,7 +3,7 @@ import datetime
 #Some helpful functions
 
 RECOMMEND_MESSAGE = "Вероятно, эта задача не будет выполнена в срок. \
-Оптимальное время для начала задачи: "
+Оптимальное время для начала задачи: {0}"
 
 def timeToNumber():
 	'''
@@ -21,6 +21,16 @@ def timeToNumber():
 		return 1
 	else:
 		return 2
+
+def numberToTime(value):
+	if value == 0:
+		return "Утро"
+	if value == 1:
+		return "День"
+	if value == 2:
+		return "Вечер"
+	if value == 3:
+		return "Ночь"
 
 
 def typeToNumber(value):

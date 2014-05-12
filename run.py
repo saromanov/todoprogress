@@ -9,7 +9,7 @@ from wtforms.validators import Required, DataRequired, InputRequired
 
 from pymongo import MongoClient
 
-from learning import predict_success, gaussianPredict, getData
+from learning import predict_success, gaussianPredict, getData, findOptimalTime
 from util import *
 from db import DB
 
@@ -67,7 +67,10 @@ def main():
 				timeToNumber()])
 			if result == 0:
 				alert = "alert alert-success"
-				message = RECOMMEND_MESSAGE
+				rec_time = findOptimalTime(targetFields, \
+					[typeToNumber(request.form["type_of_task"]), int(request.form["deadline"]) * 60],
+					"complete")
+				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
 			return render_template("index.html", form=form, sf=sf,
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
 				message=message,\

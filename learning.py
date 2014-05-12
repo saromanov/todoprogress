@@ -82,14 +82,16 @@ def find_similar_tasks(X, y):
 	return ch.fit_transform(X_train, y)
 
 
-def gaussianPredict(fields, target, cand):
+def gaussianPredict(fields, target_data, cand):
 	'''
 		Predict for complete of current task
 	 	X, y = prepareData(data, ["starttime", "time", "type"], "complete")
 	 	gaussianPredict(X, y, [2, 100, 2])
 	 '''
+
+	#Change to load from mongo
 	data = loadData("../task_data.json")
-	data,target = prepareData(data, ["starttime", "time", "type"], "complete")
+	data,target = prepareData(data, fields, cand)
 	funcs = [GaussianNB, MultinomialNB, BernoulliNB]
 	minmissing = 99999999
 	resultNB = None
@@ -101,14 +103,22 @@ def gaussianPredict(fields, target, cand):
 		if missing < minmissing:
 			minmissing = missing
 			resultNB = fitting
-	return resultNB.predict(cand)[0]
+	return resultNB.predict(target_data)[0]
+
+#Find optimal time for success this task
+def findOptimalTime(fields, target, cand):
+	values = [0,1,2,3]
+	for f in values:
+		result = gaussianPredict(fields, [f] + target, cand)
+		if result == 1:
+			return f
+
+
 
 #TODO, make function for recommendation for better task on this time
 
-
-#data = loadData("../task_data.json")
-#X,y = prepareData(data, ["starttime", "time", "type"], "complete")
-#print(gaussianPredict(X, y, [2, 100, 2]))
+#result = findOptimalTime(["starttime", "time", "type"], [100, 2], "complete")
+#print(result)
 
 
 
