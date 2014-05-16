@@ -43,8 +43,8 @@ class TodoForm(Form):
 	#	("no", "No"),
 	#	("yes", "Yes")))
 
-	priority_field = SelectField("Priority of task", choices = (("low", "Low"), \
-		("middle", "Middle"), ("high", "High")))
+	priority_field = SelectField("Priority of task", choices = (("middle", "Middle"),\
+		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
 
 	#Think about better solution
