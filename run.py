@@ -75,7 +75,7 @@ def main():
 					"complete")
 				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
 			return render_template("index.html", form=form, sf=sf,
-				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
+				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(sortby='priority'),\
 				message=message,\
 				value=alert)
 		else:
@@ -85,7 +85,7 @@ def main():
 				value="alert alert-success", message=\
 				"Задачи удалены, но их можно восстановить")
 	return render_template("index.html", form=form, sf=sf,
-		thisdate=datetime.datetime.now(),tasks=dbdata.tasks())
+		thisdate=datetime.datetime.now(),tasks=dbdata.tasks(sortby='priority'))
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():

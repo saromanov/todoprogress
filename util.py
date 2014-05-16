@@ -46,7 +46,6 @@ def typeToNumber(value):
 	if value == "programming":
 		return 4
 
-
 def checkDeadline(data):
 	'''
 		Check how much time is left to deadline
@@ -55,6 +54,15 @@ def checkDeadline(data):
 	value = time.strptime(data, "%Y-%m-%d %H:%M:%S")
 	dt = datetime.datetime.fromtimestamp(mktime(value))
 	return dt - datetime.datetime.now()
+
+
+def priorityToNumber(priority):
+	if priority == 'low':
+		return 0
+	if priority == 'middle':
+		return 1
+	if priority == 'high':
+		return 2
 
 
 

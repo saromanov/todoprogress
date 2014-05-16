@@ -1,5 +1,7 @@
 #Working with mongo
 import datetime
+import pymongo
+from util import priorityToNumber
 
 class DB:
 	def __init__(self, dbdata, trash):
@@ -18,7 +20,7 @@ class DB:
 			'type':request.form["type_of_task"],\
 			'description': request.form["descr"],\
 			'date': datetime.datetime.utcnow(),\
-			'priority':request.form["priority_field"],\
+			'priority':priorityToNumber(request.form["priority_field"]),\
 			'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
 				int(request.form["deadline"])),\
 			'tags': tags})
@@ -31,7 +33,9 @@ class DB:
 		if len(task) > 0:
 			self._dbdata.update({name: taskname, field: value})
 
-	def tasks(self):
+	def tasks(self, sortby=None):
+		if sortby == 'priority':
+			return list(self._dbdata.find().sort([('priority', pymongo.DESCENDING)]))
 		return list(self._dbdata.find())
 
 	def current_tasks(self):
@@ -59,4 +63,3 @@ class DB:
 
 	def loadTrainData(self, traindb):
 		return list(traindb.find())
-

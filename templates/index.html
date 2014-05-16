@@ -20,7 +20,7 @@
     <h2> Current tasks in progess </h2>
     {% for task in tasks %}
   	 <label class="checkbox inline">
-      {% if task.priority == 'high' %}
+      {% if task.priority == 2 %}
         <span style="color: red;">
 		      <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task}}
         </span>
