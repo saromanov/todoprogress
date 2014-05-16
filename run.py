@@ -42,6 +42,9 @@ class TodoForm(Form):
 	#iscomplete = SelectField("This task is complete?", choices=(\
 	#	("no", "No"),
 	#	("yes", "Yes")))
+
+	priority_field = SelectField("Priority of task", choices = (("low", "Low"), \
+		("middle", "Middle"), ("high", "High")))
 	tags = TextField("Tags")
 
 	#Think about better solution
@@ -58,7 +61,7 @@ def main():
 	sf = SearchForm()
 	if request.method == 'POST':
 		if len(form.tf.data) != 0:
-			#dbdata.addTask(request)
+			dbdata.addTask(request)
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
@@ -67,7 +70,6 @@ def main():
 				timeToNumber()], "complete")
 			if result == 0:
 				alert = "alert alert-success"
-				#print('PERDACHA: ', [typeToNumber(request.form["type_of_task"]), int(request.form["deadline"]) * 60])
 				rec_time = findOptimalTime(targetFields, \
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
 					"complete")

@@ -20,7 +20,13 @@
     <h2> Current tasks in progess </h2>
     {% for task in tasks %}
   	 <label class="checkbox inline">
-		  <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task }}
+      {% if task.priority == 'high' %}
+        <span style="color: red;">
+		      <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task}}
+        </span>
+      {% else %}
+       <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task}}
+      {% endif %}
 	   </label>
     {% endfor %}
     <input type="submit" value="Remove tasks" class="btn btn-large btn-primary"></p>
@@ -41,6 +47,8 @@
   {{ form.tags(size=50) }}
   <h2> Deadline (in hours) </h2>
   {{ form.deadline }}
+  <h2> Choice priority of task </h2>
+  {{ form.priority_field}}
 
   <br><br>
   <p><input type="submit" value="Add" class="btn btn-large btn-primary"></p>

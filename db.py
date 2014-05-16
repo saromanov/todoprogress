@@ -18,6 +18,7 @@ class DB:
 			'type':request.form["type_of_task"],\
 			'description': request.form["descr"],\
 			'date': datetime.datetime.utcnow(),\
+			'priority':request.form["priority_field"],\
 			'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
 				int(request.form["deadline"])),\
 			'tags': tags})

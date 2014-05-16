@@ -12,8 +12,13 @@
   <h1> Your current tasks </h1>
   <ul>
     {% for (task, value) in tasks %}
+    {% if task.priority == 'high' %}
+    <span style="color: red;">
+            <li>{{ task.task }} </li>
+        </span>
+    {% endif %}
     {% if task.complete == "yes" %} 
-    	<span style="color: red;">
+    	<span style="color: green;">
         	<li>{{ task.task }} </li>
         </span>
     {% else %}
