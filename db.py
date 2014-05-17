@@ -33,7 +33,6 @@ class DB:
 		 	append data for task
 		'''
 		self._dbdata.update({'_id': ObjectId(taskid)},{'$set': {field: value}}, upsert=False)
-		print(list(self._dbdata.find()))
 
 	def append(self, taskid, fields):
 		for field in fields:

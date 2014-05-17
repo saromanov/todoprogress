@@ -94,8 +94,6 @@ def main():
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
 				value="alert alert-success", message=\
 				"Задачи удалены, но их можно восстановить")
-	for t in dbdata.tasks(sortby='priority'):
-		print(t)
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks(sortby='priority'))
 

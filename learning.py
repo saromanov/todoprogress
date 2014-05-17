@@ -6,6 +6,7 @@ from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 import numpy as np
 import json
 import os
+from math import log, sqrt
 
 def loadData(path):
 	if not os.path.isfile(path):
@@ -81,16 +82,16 @@ def find_similar_tasks(X, y):
 	result = ch.fit_transform(X_train, y)
 	return ch.fit_transform(X_train, y)
 
-def find_similar_names(data, target):
+def find_similar_name(data, target):
 	'''
 		Get most similar names on current task from db
+		Simple compute count of identical words
 	'''
 	results = []
 	maxdiff = 0
 	splitter = target.lower().split()
 	for w in data.keys():
 		value = data[w]['task'].lower().split()
-		print(value)
 		result = value + splitter
 		old = len(result)
 		diff = old - len(set(result))
@@ -102,6 +103,32 @@ def find_similar_names(data, target):
 			results.append(data[w])
 	return results
 
+
+def find_similar_name_log(data, target):
+	results = []
+	splitter = target.lower().split()
+	maxdift = 0
+	task = None
+	for w in data:
+		value = data[w]['task'].lower().split()
+		result = 0.0
+		for t in splitter:
+			result += compute_distance(value, splitter, t)
+		if result != 0 and log(result) > maxdift:
+			maxdiff = log(result)
+			task = data[w]
+	print(task)
+
+def compute_distance(original, target, word):
+	if word in original and word in target:
+		original_pos = original.index(word)+1
+		target_pos = target.index(word)+1
+		diff = sqrt(abs(original_pos**2 - target_pos**2))
+		res_diff = 1 if diff == 0 else diff
+		return len(original)/(res_diff * len(target)) * \
+			original_pos/ target_pos + (original_pos/len(original))
+	else:
+		return 0
 
 
 def gaussianPredict(fields, target_data, cand):
@@ -150,7 +177,7 @@ def estimateTrainingData(data, fields, values, avalues, cand):
 
 #TODO, make function for recommendation for better task on this time
 
-data = loadData("../task_data.json")
-print(find_similar_names(data, 'Want to sleep'))
+#data = loadData("../task_data.json")
+#find_similar_name_log(data, 'Try to complete homework')
 
 
