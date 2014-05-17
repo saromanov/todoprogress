@@ -8,13 +8,30 @@
  <li class="active"><a href="/"><i class="icon-home icon-white"></i> Главная</a></li>
  <li><a href="#"><i class="icon-book"></i> График</a></li>
 </ul>
+
+<div class="container-fluid">
+  <h1>Smart TODO monitor</h1>
+  <div class="row-fluid">
+  <div class="pull-right">
+  <form action="" method="post" name="bftform">
+    <div class="pull-right">
+    <h2> Task ID </h2>
+    {{ bftform.task_id }}
+    <h2> Your mark before task complete </h2>
+    {{ bftform.mark }}
+    <h2> This task was complete before deadline? </h2>
+    {{ bftform.iscomplete }}
+    <p><input type="submit" value="Add" class="btn btn-large btn-primary"></p>
+    </div>
+  </form>
 <div class="container">
   <h1> Your current tasks </h1>
   <ul>
     {% for (task, value) in tasks %}
     {% if task.priority == 2 %}
     <span style="color: red;">
-            <li>{{ task.task }} </li>
+            <li>{{ task.task }}</li>
+            <p> ID {{ task._id }} </p>
         </span>
     {% endif %}
     {% if task.complete == "yes" %} 
@@ -26,6 +43,7 @@
     		<li> {{ task.task }}</li>
             <p> Description: {{ task.description }} </p>
             <p> Deadline : {{ task.deadline }} </p>
+            <p> ID: {{ task._id }}
     		<p> Prediction score: {{ value }} </p>
     	</span>
     {% endif %}

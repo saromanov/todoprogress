@@ -38,18 +38,28 @@ class TodoForm(Form):
 		("fun", "fun"),
 		("work", "work"),
 		("programming", "programming")))
-	#mark = IntegerField("Your mark")
-	#iscomplete = SelectField("This task is complete?", choices=(\
-	#	("no", "No"),
-	#	("yes", "Yes")))
-
 	priority_field = SelectField("Priority of task", choices = (("middle", "Middle"),\
 		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
 
-	#Think about better solution
+	#Replace for vetter solution
 	deadline = IntegerField("Deadline")
 	submit = SubmitField("Add")
+
+
+
+class BeforeTaskForm(Form):
+	'''
+		Adding information after completion of task
+	'''
+
+	#Replace for better solution
+	task_id = TextField("task")
+	mark = IntegerField("Your mark")
+	iscomplete = SelectField("This task was complete before deadline?", choices=(\
+		("no", "No"),
+		("yes", "Yes")))
+
 
 
 class SearchForm(Form):
@@ -84,6 +94,8 @@ def main():
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
 				value="alert alert-success", message=\
 				"Задачи удалены, но их можно восстановить")
+	for t in dbdata.tasks(sortby='priority'):
+		print(t)
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks(sortby='priority'))
 
@@ -92,7 +104,12 @@ def show_list():
 	dtasks = dbdata.tasks()
 	size = len(dtasks)
 	rem_size = len(dbdata.fromTrash())
-	return render_template("list.html", tasks=zip(dtasks, list(range(size))),\
+	bftform = BeforeTaskForm()
+	if request.method ==  'POST':
+		task_id = request.form['task_id']
+		dbdata.append(task_id, request.form)
+		#dbdata.append
+	return render_template("list.html", bftform = bftform, tasks=zip(dtasks, list(range(size))),\
 		trash=zip(dbdata.fromTrash(), list(range(rem_size))))
 
 

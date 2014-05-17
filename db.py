@@ -1,7 +1,8 @@
 #Working with mongo
 import datetime
 import pymongo
-from util import priorityToNumber
+from bson.objectid import ObjectId
+from util import priorityToNumber, completeToNumber
 
 class DB:
 	def __init__(self, dbdata, trash):
@@ -20,18 +21,27 @@ class DB:
 			'type':request.form["type_of_task"],\
 			'description': request.form["descr"],\
 			'date': datetime.datetime.utcnow(),\
+			'mark':0,\
+			'iscomplete': '',\
 			'priority':priorityToNumber(request.form["priority_field"]),\
 			'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
 				int(request.form["deadline"])),\
 			'tags': tags})
 
-	def appendData(self, taskname, field, value):
+	def _appendData(self, taskid, field, value):
 		'''
 		 	append data for task
 		'''
-		task = self._dbdata.find({name: taskname})
-		if len(task) > 0:
-			self._dbdata.update({name: taskname, field: value})
+		self._dbdata.update({'_id': ObjectId(taskid)},{'$set': {field: value}}, upsert=False)
+		print(list(self._dbdata.find()))
+
+	def append(self, taskid, fields):
+		for field in fields:
+			if field != 'task_id':
+				value = fields[field]
+				if field == 'iscomplete':
+					value = completeToNumber(value)
+				self._appendData(taskid, field, completeToNumber(fields[field]))
 
 	def tasks(self, sortby=None):
 		if sortby == 'priority':

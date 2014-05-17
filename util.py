@@ -65,4 +65,11 @@ def priorityToNumber(priority):
 		return 2
 
 
+def completeToNumber(iscomplete):
+	if iscomplete == 'no':
+		return 0
+	if iscomplete == 'yes':
+		return 1
+
+
 
