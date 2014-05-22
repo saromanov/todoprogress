@@ -1,5 +1,5 @@
 import datetime
-from time import mktime, time
+from time import mktime, time, strptime
 
 #Some helpful functions
 
@@ -51,7 +51,7 @@ def checkDeadline(data):
 		Check how much time is left to deadline
 		data - "2014-05-09 07:37:50"
 	'''
-	value = time.strptime(data, "%Y-%m-%d %H:%M:%S")
+	value = strptime(data, "%Y-%m-%d %H:%M:%S")
 	dt = datetime.datetime.fromtimestamp(mktime(value))
 	return dt - datetime.datetime.now()
 

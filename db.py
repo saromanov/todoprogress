@@ -2,7 +2,7 @@
 import datetime
 import pymongo
 from bson.objectid import ObjectId
-from util import priorityToNumber, completeToNumber
+from util import priorityToNumber, completeToNumber, checkDeadline
 
 class DB:
 	def __init__(self, dbdata, trash):
@@ -42,10 +42,27 @@ class DB:
 					value = completeToNumber(value)
 				self._appendData(taskid, field, completeToNumber(fields[field]))
 
-	def tasks(self, sortby=None):
-		if sortby == 'priority':
-			return list(self._dbdata.find().sort([('priority', pymongo.DESCENDING)]))
-		return list(self._dbdata.find())
+	def tasks(self, *args, **kwargs):
+		taskdata = self._dbdata.find()
+		get = kwargs.get
+		if get('deadline') == True:
+			taskdata = self._tasks_before_deadline(taskdata)
+		if get('priority')== True:
+			taskdata = self._tasks_by_priority(taskdata)
+		return taskdata
+
+	def _tasks_by_priority(self, tasksdata):
+		if 'priority' in tasksdata:
+			return tasksdata.sort([('priority', pymongo.DESCENDING)])
+		return tasksdata	
+
+	def _tasks_before_deadline(self, tasksdata):
+		result = []
+		for t in tasksdata:
+			if 'deadline' in t:
+			  if t['deadline'] > datetime.datetime.now():
+			  	result.append(t)
+		return result
 
 	def current_tasks(self):
 		return list(filter(lambda x: x['task'] if 'complete' not in x or \

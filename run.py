@@ -95,7 +95,7 @@ def main():
 				value="alert alert-success", message=\
 				"Задачи удалены, но их можно восстановить")
 	return render_template("index.html", form=form, sf=sf,
-		thisdate=datetime.datetime.now(),tasks=dbdata.tasks(sortby='priority'))
+		thisdate=datetime.datetime.now(),tasks=dbdata.tasks(priority=True, deadline=True))
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
