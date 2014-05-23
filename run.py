@@ -118,6 +118,10 @@ def tag_info(tag=None):
 	dtasks = dbdata.getByTag2(tag)
 	return render_template('tag.html', tag=tag, tasks=dtasks)
 
+@app.route('/planning', methods=("GET", "POST"))
+def planning():
+	return render_template('planning.html')
+
 #TODO добавить отдельно базу для выполненных и текущих задач
 #Предсказание оптимального времени выполнения задач
 if __name__ == '__main__':

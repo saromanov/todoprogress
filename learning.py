@@ -3,6 +3,7 @@ from sklearn.neighbors.nearest_centroid import NearestCentroid
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.feature_selection import SelectKBest
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
+from sklearn.linear_model import Ridge, Lasso, LinearRegression
 import numpy as np
 import json
 import os
@@ -23,7 +24,7 @@ def prepareData(datajson, fields, param=None):
 	X = []
 	y = []
 	for v in datajson:
-		data = datajson[v]
+		data = v
 		temp = []
 		for f in fields:
 			temp.append(data[f])
@@ -46,10 +47,11 @@ def getData(request, fields):
 
 #Split data on test set and train set
 
-def Regression(X, y, pred_value):
-	regr = linear_model.LogisticRegression()\
+def Regression(X, y, pred_value, model):
+	regr = model()\
 			.fit(X, y)\
 			.predict(pred_value)
+	return regr
 
 
 #Clustering current task on hard, medium and easy
@@ -117,7 +119,8 @@ def find_similar_name_log(data, target):
 		if result != 0 and log(result) > maxdift:
 			maxdiff = log(result)
 			task = data[w]
-	print(task)
+			results.append(task)
+	return task, results
 
 def compute_distance(original, target, word):
 	if word in original and word in target:
@@ -174,10 +177,42 @@ def estimateTrainingData(data, fields, values, avalues, cand):
 		data.append(avalues)
 
 
+def simple_distance(actual, targets):
+	mindist = 99999
+	result = None
+	for t in targets:
+		value = 0
+		for param in actual:
+			value += abs(param - t)
+		if value < mindist:
+			mindist = value
+			result = t
+	return result
+
+def planning_tasks(data, tasklist):
+	'''
+		data - list of tasks
+	'''
+	predicts = []
+	regrs = [LinearRegression, Ridge, Lasso]
+	for d in tasklist:
+		optimal_task, tasks = find_similar_name_log(data, d)
+		X, y = prepareData(tasks, ['complete', 'type'], 'starttime')
+		values = []
+		if len(tasks) > 1:
+			for r in regrs:
+				values.append(Regression(X, y, [optimal_task['complete'], optimal_task['type']], r))
+			predicts.append(simple_distance(values, [0,1,2,3]))
+		else:
+			predicts.append(-1)
+	return predicts
 
 #TODO, make function for recommendation for better task on this time
 
 #data = loadData("../task_data.json")
 #find_similar_name_log(data, 'Try to complete homework')
+
+data = loadData("../task_data.json")
+print(planning_tasks(data, ["Watch tv", "walking", "Study homework"]))
 
 
