@@ -17,7 +17,7 @@
   <div class="row-fluid">
   <div class="pull-right">
   <form action="" method="post" name="progresstask"
-    <h2> Current tasks in progess </h2>
+    <h2> Текущие задачи: </h2>
     {% for task in tasks %}
   	 <label class="checkbox inline">
       {% if task.priority == 2 %}
@@ -29,7 +29,10 @@
       {% endif %}
 	   </label>
     {% endfor %}
-    <input type="submit" value="Remove tasks" class="btn btn-large btn-primary"></p>
+
+    {% if tasks|length != 0 %}
+       <input type="submit" value="Remove tasks" class="btn btn-large btn-primary"></p>
+    {% endif %}
     </div>
   </form>
     <div class="span2">

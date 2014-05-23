@@ -85,13 +85,13 @@ def main():
 					"complete")
 				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
 			return render_template("index.html", form=form, sf=sf,
-				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(sortby='priority'),\
+				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(priority=True, deadline=True),\
 				message=message,\
 				value=alert)
 		else:
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
-				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(),\
+				thisdate=datetime.datetime.now(),tasks=dbdata.tasks(priority=True, deadline=True),\
 				value="alert alert-success", message=\
 				"Задачи удалены, но их можно восстановить")
 	return render_template("index.html", form=form, sf=sf,

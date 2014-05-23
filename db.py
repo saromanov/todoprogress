@@ -49,7 +49,7 @@ class DB:
 			taskdata = self._tasks_before_deadline(taskdata)
 		if get('priority')== True:
 			taskdata = self._tasks_by_priority(taskdata)
-		return taskdata
+		return list(taskdata)
 
 	def _tasks_by_priority(self, tasksdata):
 		if 'priority' in tasksdata:
