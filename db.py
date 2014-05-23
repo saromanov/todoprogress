@@ -15,7 +15,7 @@ class DB:
 
 	def addTask(self, request):
 		dir_tags = request.form["tags"]
-		tags = dir_tags.split(',') if len(dir_tags) > 0 else None
+		tags = dir_tags.replace(' ','').split(',') if len(dir_tags) > 0 else None
 		self._dbdata.insert({
 			'task': request.form["tf"],\
 			'type':request.form["type_of_task"],\
@@ -78,10 +78,19 @@ class DB:
 	def loadTrainData(self, traindb):
 		return list(traindb.find())
 
-	#Get tasks by tags
-	def getByTags(self, tags):
-		pass
+	#Get tasks by tag
+	def getByTag(self, tag):
+		return list(self._dbdata.find({'tags': {"$all": [tag]}}))
 
-	#Активные таги на которые ссылается наибольшее количество выполненных задач
-	def getActiveTags(self):
-		pass
+	#Get tasks by tag
+	def getByTag2(self, tag):
+		return list(self._dbdata.find({'tags': {"$in":[tag]}}))
+
+	def getTags(self):
+		taskdata = self.tasks()
+		tags = []
+		for td in taskdata:
+			if 'tags' in td and td['tags'] != None:
+				for t in td['tags']:
+					tags.append(t)
+		return set(tags)

@@ -94,8 +94,10 @@ def main():
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				value="alert alert-success", message=\
 				"Задачи удалены, но их можно восстановить")
+	tags = dbdata.getTags()
 	return render_template("index.html", form=form, sf=sf,
-		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority())
+		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
+		tags = tags)
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
@@ -111,6 +113,10 @@ def show_list():
 		trash=zip(dbdata.fromTrash(), list(range(rem_size))))
 
 
+@app.route('/<tag>_tag', methods=("GET", "POST"))
+def tag_info(tag=None):
+	dtasks = dbdata.getByTag2(tag)
+	return render_template('tag.html', tag=tag, tasks=dtasks)
 
 #TODO добавить отдельно базу для выполненных и текущих задач
 #Предсказание оптимального времени выполнения задач

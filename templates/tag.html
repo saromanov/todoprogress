@@ -1,0 +1,23 @@
+{% block title %}
+	Show all tasks with tag {{ tag }}
+{% endblock %}
+
+{% block body %}
+	{% for task in tasks %}
+	<p> {{ task['task'] }} </p>
+	{% endfor %}
+
+	<h3> Другие тэги </h3>
+	<h2>
+	{% for task in tasks %}
+	  {% for tag in task['tags'] %}
+			<a href="{{ tag }}_tag">{{ tag }}</a>
+	  {% endfor %}
+	{% endfor %}
+	</h2>
+
+	<h3> Связанные задачи </h3>
+	{% for task in tasks %}
+		<p> {{ task.task }} </p>
+	{% endfor %}
+{% endblock %}

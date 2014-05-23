@@ -64,7 +64,14 @@
 </div>
 
 <div class="container-fluid">
-  <p>Tags </p>
+  <p>Tags: </p>
+  {% block scoped %}
+  <h2>
+  {% for tag in tags %}
+      <a href="{{ tag }}_tag">{{ tag }} </a>
+  {% endfor %}
+  </h2>
+  {% endblock %}
 </div>
 
 {% endblock %}
