@@ -43,26 +43,14 @@ class DB:
 				self._appendData(taskid, field, completeToNumber(fields[field]))
 
 	def tasks(self, *args, **kwargs):
-		taskdata = self._dbdata.find()
-		get = kwargs.get
-		if get('deadline') == True:
-			taskdata = self._tasks_before_deadline(taskdata)
-		if get('priority')== True:
-			taskdata = self._tasks_by_priority(taskdata)
-		return list(taskdata)
+		return list(self._dbdata.find())
 
-	def _tasks_by_priority(self, tasksdata):
-		if 'priority' in tasksdata:
-			return tasksdata.sort([('priority', pymongo.DESCENDING)])
-		return tasksdata	
+	def tasks_by_deadline_priority(self):
+		return list(self._dbdata.find({'deadline': {'$gt': datetime.datetime.now()}})\
+		                .sort('priority', pymongo.DESCENDING))
 
 	def _tasks_before_deadline(self, tasksdata):
-		result = []
-		for t in tasksdata:
-			if 'deadline' in t:
-			  if t['deadline'] > datetime.datetime.now():
-			  	result.append(t)
-		return result
+		return tasksdata.find({'deadline': {'$gt': datetime.datetime.now()}}).sort('priority', pymongo.DESCENDING)
 
 	def current_tasks(self):
 		return list(filter(lambda x: x['task'] if 'complete' not in x or \
@@ -89,3 +77,11 @@ class DB:
 
 	def loadTrainData(self, traindb):
 		return list(traindb.find())
+
+	#Get tasks by tags
+	def getByTags(self, tags):
+		pass
+
+	#Активные таги на которые ссылается наибольшее количество выполненных задач
+	def getActiveTags(self):
+		pass
