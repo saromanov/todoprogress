@@ -73,7 +73,7 @@ def main():
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
-		if len(form.tf.data) != 0:
+		if len(form.tf.data) != 0 and 'Remove' in request.form:
 			dbdata.addTask(request)
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
@@ -91,6 +91,13 @@ def main():
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				message=message,\
 				value=alert)
+
+		#a little "survey" after completion of task. Of course, need for prediction
+		if 'Complete' in request.form:
+			taskname = list(request.form.keys())[0]
+			bff = BeforeTaskForm()
+			return redirect(url_for('task'))
+			#return render_template("task.html", form=bff, taskname=taskname)
 		else:
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
@@ -138,6 +145,15 @@ def planning():
 		form = PlanningForm()
 		setattr(PlanningForm, 'plan0', TextField("Plan", [DataRequired("Enter your task")]))
 		return render_template('planning.html', form=form, plans=['plan0'])
+
+
+@app.route('/task', methods=("GET", "POST"))
+def task():
+	if request.method == 'POST':
+		if 'append' in request.form:
+			dbdata.append(123, request.form)
+	bff = BeforeTaskForm()
+	return render_template('task.html', form=bff)
 
 #TODO добавить отдельно базу для выполненных и текущих задач
 #Предсказание оптимального времени выполнения задач
