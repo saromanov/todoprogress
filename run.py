@@ -62,8 +62,11 @@ class BeforeTaskForm(Form):
 
 
 
-class SearchForm(Form):
-	search = TextField("search", validators=[DataRequired()])
+class SearchForm(Form):pass
+
+
+class PlanningForm(Form):
+	plan = TextField("planning", validators=[DataRequired()])
 
 @app.route("/", methods=("GET", "POST"))
 def main():
@@ -120,7 +123,21 @@ def tag_info(tag=None):
 
 @app.route('/planning', methods=("GET", "POST"))
 def planning():
-	return render_template('planning.html')
+	form = PlanningForm()
+	if request.method == 'POST':
+		if 'add' in request.form:
+			names=[]
+			for i in range(len(request.form)+1):
+				name = 'plan{0}'.format(i)
+				names.append(name)
+				setattr(PlanningForm, name, TextField("Plan", [DataRequired("Enter your task")]))
+			return render_template('planning.html', form=form, plans=names)
+		if 'compute' in request.form:
+			return 'TODO'
+	else:
+		form = PlanningForm()
+		setattr(PlanningForm, 'plan0', TextField("Plan", [DataRequired("Enter your task")]))
+		return render_template('planning.html', form=form, plans=['plan0'])
 
 #TODO добавить отдельно базу для выполненных и текущих задач
 #Предсказание оптимального времени выполнения задач

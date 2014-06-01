@@ -1,3 +1,22 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
 {% block title %}
 	Оптимальное планирование задач
+
+{% endblock %}
+
+
+{% block content %}
+<h1> Введите список задач </h1>
+	<div class="container-fluid">
+	<form action="" method="post" name="plantask">
+	 {% for plan in plans %}
+		<p> {{ form[plan] }} </p>
+	 {% endfor %}
+		<input type="submit" name='add' value="Добавить задачу" class="btn btn-large btn-primary"></input>
+		<input type="submit" name='compute' value="Рассчитать" class="btn btn-large btn-primary"></input>
+	</form>
+	</div>
 {% endblock %}
