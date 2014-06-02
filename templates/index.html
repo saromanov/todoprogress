@@ -4,11 +4,12 @@
 
 {% block content %}
 
-<ul class="nav nav-list">
- <li class="active"><a href="/list"><i class="icon-home icon-white"></i> Список задач</a></li>
- <li><a href="#"><i class="icon-book"></i> График</a></li>
- <li><a href="/planning"><i class="icon-book"></i> Планирование задач</a></li>
-</ul>
+<ol class="breadcrumb">
+  <li class="active"><a href="/list"><i class="icon-home icon-white"></i> Список задач</a></li>
+ <li><a href="#"> График</a></li>
+ <li><a href="/planning"> Планирование задач</a></li>
+</ol>
+
     <div class= "{{ value }}">
       <p> {{ message }}</p>
     </div>
@@ -39,9 +40,6 @@
     {% endif %}
     </div>
   </form>
-    <div class="span2">
-  {{ thisdate }}
-
 
  <form action="" method="post" name="todoform">
   <h2>Add new task</h2>
@@ -52,6 +50,8 @@
    {{ form.type_of_task }}
   <h2> Add tags for this task </h2>
   {{ form.tags(size=50) }}
+  <h2> Start time </h2>
+  {{ form.starttime }}
   <h2> Deadline (in hours) </h2>
   {{ form.deadline }}
   <h2> Choice priority of task </h2>
@@ -59,7 +59,6 @@
 
   <br><br>
   <p><input type="submit" value="Add" class="btn btn-large btn-primary"></p>
-  </div>
   </div>
   </div>
 </form>

@@ -4,8 +4,9 @@ from contextlib import closing
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, RecaptchaField
 from wtforms import TextField, HiddenField, ValidationError,\
- SubmitField, IntegerField, FormField, TextAreaField, SelectField, validators
+ SubmitField, IntegerField, FormField, TextAreaField, SelectField, validators, DateTimeField
 from wtforms.validators import Required, DataRequired, InputRequired
+from peewee import Model
 
 from pymongo import MongoClient
 
@@ -31,7 +32,7 @@ tasks = db.tasks
 trash = db.trash
 dbdata = DB(tasks, trash)
 class TodoForm(Form):
-	tf = TextField("Task", [DataRequired("Enter your task")])
+	tf = TextField("Task")
 	descr = TextField("Desription")
 	type_of_task = SelectField("Type of task", choices=(("study", "study"), \
 		("read", "read"), \
@@ -41,6 +42,7 @@ class TodoForm(Form):
 	priority_field = SelectField("Priority of task", choices = (("middle", "Middle"),\
 		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
+	starttime = DateTimeField(default=datetime.datetime.now)
 
 	#Replace for vetter solution
 	deadline = IntegerField("Deadline")
@@ -48,6 +50,8 @@ class TodoForm(Form):
 
 
 
+class BaseModel(Model):
+	join_field = DateTimeField()
 class BeforeTaskForm(Form):
 	'''
 		Adding information after completion of task
@@ -65,8 +69,7 @@ class BeforeTaskForm(Form):
 class SearchForm(Form):pass
 
 
-class PlanningForm(Form):
-	plan = TextField("planning", validators=[DataRequired()])
+class PlanningForm(Form):pass
 
 @app.route("/", methods=("GET", "POST"))
 def main():
@@ -160,3 +163,6 @@ def task():
 if __name__ == '__main__':
 	Bootstrap(app)
 	app.run()
+
+
+#http://charlesleifer.com/blog/saturday-morning-hacks-revisiting-the-notes-app/ Изучить
