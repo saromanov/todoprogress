@@ -76,7 +76,7 @@ def main():
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
-		if len(form.tf.data) != 0 and 'Remove' in request.form:
+		if len(form.tf.data) != 0:
 			dbdata.addTask(request)
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
@@ -102,7 +102,7 @@ def main():
 			return redirect(url_for('task'))
 			#return render_template("task.html", form=bff, taskname=taskname)
 		else:
-			dbdata.removeTasks(request.form)
+			#dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				value="alert alert-success", message=\
@@ -110,7 +110,7 @@ def main():
 	tags = dbdata.getTags()
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
-		tags = tags)
+		tags = tags, taskcount=len(dbdata.tasks_by_deadline_priority()))
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
@@ -163,6 +163,3 @@ def task():
 if __name__ == '__main__':
 	Bootstrap(app)
 	app.run()
-
-
-#http://charlesleifer.com/blog/saturday-morning-hacks-revisiting-the-notes-app/ Изучить

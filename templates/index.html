@@ -15,11 +15,15 @@
     </div>
 
 <div class="container-fluid">
-  <h1>Smart TODO monitor</h1>
   <div class="row-fluid">
   <div class="pull-right">
-  <form action="" method="post" name="progresstask"
-    <h2> Текущие задачи: </h2>
+  <form action="" method="post" name="progresstask">
+   <ul class="list-group">
+    <li class="list-group-item">
+    <span class="badge">{{ taskcount }}</span>
+      Текущие задачи
+    </li>
+  </ul>
     {% for task in tasks %}
   	 <label class="checkbox inline">
       {% if task.priority == 2 %}
@@ -33,14 +37,16 @@
       {% endif %}
 	   </label>
     {% endfor %}
-
     {% if tasks|length != 0 %}
        <input type="submit" name='Remove' value="Remove tasks" class="btn btn-large btn-primary"></p>
        <input type="submit" name='Complete' value="Task is complete" class="btn btn-large btn-primary"></p>
     {% endif %}
-    </div>
+</div>
   </form>
 
+ <div class="panel panel-default">
+  <div class="panel-heading"><h2>Smart TODO monitor</h2></div>
+  <div class="panel-body">
  <form action="" method="post" name="todoform">
   <h2>Add new task</h2>
    {{ form.tf(size=50) }}
@@ -61,6 +67,8 @@
   <p><input type="submit" value="Add" class="btn btn-large btn-primary"></p>
   </div>
   </div>
+  </div>
+</div>
 </form>
 </div>
 
@@ -74,6 +82,9 @@
   </h2>
   {% endblock %}
 </div>
+
+
+
 
 {% endblock %}
 

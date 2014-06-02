@@ -1,9 +1,21 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
 {% block title %}
 	Информация о задаче {{ taskname }}
 {% endblock %}
 
 
 {% block content %}
+<ol class="breadcrumb">
+  <li class="active"><a href="/"> Главная</a></li>
+  <li class="active"><a href="/list"> Список задач</a></li>
+ <li><a href="#"> График</a></li>
+ <li><a href="/planning"> Планирование задач</a></li>
+</ol>
+
+
 <div class="row-fluid">
   <form action="" method="post" name="suform">
     <h2> Task title </h2>
