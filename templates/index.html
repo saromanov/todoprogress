@@ -26,9 +26,11 @@
   </ul>
     {% for task in tasks %}
   	 <label class="checkbox inline">
-      {% if (thisdate - task.starttime)> 0 %}
-      <p> NICE </p>
-
+      {% if task.starttime >= thisdate %}
+         <span style="color: blue;">
+         <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
+          {{ task.task }} {{ task.starttime }}
+        </span>
       {% elif task.priority == 2 %}
         <span style="color: red;">
 		      <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task}}

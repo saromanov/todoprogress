@@ -56,6 +56,13 @@ def checkDeadline(data):
 	return dt - datetime.datetime.now()
 
 
+def strToTime(timedata):
+	try:
+		return datetime.datetime.fromtimestamp(mktime(strptime(timedata, "%Y-%m-%d %H:%M:%S")))
+	except Exception:
+		raise "Time string is wrong"
+
+
 def priorityToNumber(priority):
 	if priority == 'low':
 		return 0
@@ -70,6 +77,4 @@ def completeToNumber(iscomplete):
 		return 0
 	if iscomplete == 'yes':
 		return 1
-
-
 

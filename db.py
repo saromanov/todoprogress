@@ -2,7 +2,7 @@
 import datetime
 import pymongo
 from bson.objectid import ObjectId
-from util import priorityToNumber, completeToNumber, checkDeadline
+from util import priorityToNumber, completeToNumber, checkDeadline, strToTime
 
 class DB:
 	def __init__(self, dbdata, trash):
@@ -27,7 +27,7 @@ class DB:
 			'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
 				int(request.form["deadline"])),\
 			'tags': tags,
-			'starttime': request.form["starttime"]})
+			'starttime': strToTime(request.form["starttime"])})
 
 	def _appendData(self, taskid, field, value):
 		'''
@@ -71,7 +71,11 @@ class DB:
 				self._dbdata.remove({'task': t})
 
 	def _storeToTrash(self, tasksdata):
-		self._trash.insert(tasksdata)
+		result = self._dbdata.find_one({'task': tasksdata})
+		if result != None:
+			print("THIS task was append: ")
+			self._trash.insert(result)
+		#self._trash.insert({'taskname': tasksdata})
 
 	def fromTrash(self):
 		return list(self._trash.find())

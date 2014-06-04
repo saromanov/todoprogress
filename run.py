@@ -102,12 +102,13 @@ def main():
 			return redirect(url_for('task'))
 			#return render_template("task.html", form=bff, taskname=taskname)
 		else:
-			#dbdata.removeTasks(request.form)
+			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				value="alert alert-success", message=\
 				"Задачи удалены, но их можно восстановить")
 	tags = dbdata.getTags()
+	print(dbdata.tasks_by_deadline_priority())
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 		tags = tags, taskcount=len(dbdata.tasks_by_deadline_priority()))
@@ -154,7 +155,8 @@ def planning():
 def task():
 	if request.method == 'POST':
 		if 'append' in request.form:
-			dbdata.append(123, request.form)
+			return "A"
+			#dbdata.append(123, request.form)
 	bff = BeforeTaskForm()
 	return render_template('task.html', form=bff)
 
