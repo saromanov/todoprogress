@@ -3,17 +3,20 @@ from time import mktime, time, strptime
 
 #Some helpful functions
 
-RECOMMEND_MESSAGE = "Вероятно, эта задача не будет выполнена в срок. \
-Оптимальное время для начала задачи: {0}"
+RECOMMEND_MESSAGE = "Оптимальное время для начала задачи: {0}"
+RECOVER_MESSAGE = "Задачи удалены, но их можно восстановить"
 
-def timeToNumber():
+def timeToNumber(currtime=None):
 	'''
 		0 - morning
 		1 - afternoon
 		2 - evening
 		3 - night
 	'''
-	now = datetime.datetime.now().hour
+	if currtime == None:
+		now = datetime.datetime.now().hour
+	else:
+		now = strToTime(currtime).hour
 	if now >= 0 and now <= 5:
 		return 3
 	if now >= 6 and now <= 11:

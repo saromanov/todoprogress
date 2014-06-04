@@ -84,7 +84,7 @@ def main():
 			result = gaussianPredict(targetFields, \
 				[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"]),\
 				timeToNumber()], "complete")
-			if result == 0:
+			if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"
 				rec_time = findOptimalTime(targetFields, \
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
@@ -105,8 +105,7 @@ def main():
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
-				value="alert alert-success", message=\
-				"Задачи удалены, но их можно восстановить")
+				value="alert alert-success", message=RECOMMEND_MESSAGE)
 	tags = dbdata.getTags()
 	print(dbdata.tasks_by_deadline_priority())
 	return render_template("index.html", form=form, sf=sf,

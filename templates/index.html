@@ -37,10 +37,8 @@
           {{ task.deadline - thisdate }}
         </span>
       {% else %}
-      <span style="color: red;">
        <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task}}
        {{ task.deadline - thisdate}}
-       </span>
       {% endif %}
 	   </label>
     {% endfor %}
