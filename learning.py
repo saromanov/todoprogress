@@ -24,7 +24,7 @@ def prepareData(datajson, fields, param=None):
 	X = []
 	y = []
 	for v in datajson:
-		data = v
+		data = datajson[v]
 		temp = []
 		for f in fields:
 			temp.append(data[f])
@@ -212,7 +212,7 @@ def planning_tasks(data, tasklist):
 #data = loadData("../task_data.json")
 #find_similar_name_log(data, 'Try to complete homework')
 
-data = loadData("../task_data.json")
-print(planning_tasks(data, ["Watch tv", "walking", "Study homework"]))
+#data = loadData("../task_data.json")
+#print(planning_tasks(data, ["Watch tv", "walking", "Study homework"]))
 
 

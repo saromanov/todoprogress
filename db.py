@@ -26,7 +26,8 @@ class DB:
 			'priority':priorityToNumber(request.form["priority_field"]),\
 			'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
 				int(request.form["deadline"])),\
-			'tags': tags})
+			'tags': tags,
+			'starttime': request.form["starttime"]})
 
 	def _appendData(self, taskid, field, value):
 		'''
