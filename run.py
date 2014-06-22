@@ -42,7 +42,7 @@ class TodoForm(Form):
 	priority_field = SelectField("Priority of task", choices = (("middle", "Middle"),\
 		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
-	starttime = DateTimeField(default=datetime.datetime.now)
+	starttime = DateTimeField(default=defaultTime)
 
 	#Replace for vetter solution
 	deadline = IntegerField("Deadline")
@@ -107,7 +107,6 @@ def main():
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				value="alert alert-success", message=RECOMMEND_MESSAGE)
 	tags = dbdata.getTags()
-	print(dbdata.tasks_by_deadline_priority())
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 		tags = tags, taskcount=len(dbdata.tasks_by_deadline_priority()))

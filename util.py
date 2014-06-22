@@ -6,6 +6,8 @@ from time import mktime, time, strptime
 RECOMMEND_MESSAGE = "Оптимальное время для начала задачи: {0}"
 RECOVER_MESSAGE = "Задачи удалены, но их можно восстановить"
 
+TIME_FORMAT = "%Y-%m-%d %H:%M"
+
 def timeToNumber(currtime=None):
 	'''
 		0 - morning
@@ -61,9 +63,13 @@ def checkDeadline(data):
 
 def strToTime(timedata):
 	try:
-		return datetime.datetime.fromtimestamp(mktime(strptime(timedata, "%Y-%m-%d %H:%M:%S")))
+		return datetime.datetime.fromtimestamp(mktime(strptime(timedata, TIME_FORMAT)))
 	except Exception:
-		raise "Time string is wrong"
+		return defaultTime()
+
+def defaultTime():
+	d = datetime.datetime.now()
+	return d.strptime(d.strftime(TIME_FORMAT), TIME_FORMAT)
 
 
 def priorityToNumber(priority):
@@ -80,4 +86,6 @@ def completeToNumber(iscomplete):
 		return 0
 	if iscomplete == 'yes':
 		return 1
+
+
 
