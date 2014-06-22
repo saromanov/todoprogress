@@ -20,6 +20,12 @@ import datetime
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+TypeOfTaskField = SelectField("Type of task", choices=(("study", "study"), \
+		("read", "read"), \
+		("fun", "fun"),
+		("work", "work"),
+		("programming", "programming")))
+
 DEBUG=True
 SECRET_KEY = 'secret'
 
@@ -34,11 +40,7 @@ dbdata = DB(tasks, trash)
 class TodoForm(Form):
 	tf = TextField("Task")
 	descr = TextField("Desription")
-	type_of_task = SelectField("Type of task", choices=(("study", "study"), \
-		("read", "read"), \
-		("fun", "fun"),
-		("work", "work"),
-		("programming", "programming")))
+	type_of_task = TypeOfTaskField
 	priority_field = SelectField("Priority of task", choices = (("middle", "Middle"),\
 		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
@@ -69,7 +71,10 @@ class BeforeTaskForm(Form):
 class SearchForm(Form):pass
 
 
-class PlanningForm(Form):pass
+class PlanningForm(Form):
+	tf = TextField("Task")
+	ttype = TypeOfTaskField
+	deadline = TextField("deadline", description="A")
 
 @app.route("/", methods=("GET", "POST"))
 def main():
@@ -133,19 +138,15 @@ def tag_info(tag=None):
 @app.route('/planning', methods=("GET", "POST"))
 def planning():
 	form = PlanningForm()
+	tasks = []
 	if request.method == 'POST':
 		if 'add' in request.form:
-			names=[]
-			for i in range(len(request.form)+1):
-				name = 'plan{0}'.format(i)
-				names.append(name)
-				setattr(PlanningForm, name, TextField("Plan", [DataRequired("Enter your task")]))
-			return render_template('planning.html', form=form, plans=names)
+			tasks.append(request.form)
 		if 'compute' in request.form:
 			return 'TODO'
 	else:
 		form = PlanningForm()
-		setattr(PlanningForm, 'plan0', TextField("Plan", [DataRequired("Enter your task")]))
+		#setattr(PlanningForm, 'plan0', TextField("Plan", [DataRequired("Enter your task")]))
 		return render_template('planning.html', form=form, plans=['plan0'])
 
 
