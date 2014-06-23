@@ -191,28 +191,36 @@ def simple_distance(actual, targets):
 
 def planning_tasks(data, tasklist):
 	'''
-		data - list of tasks
+		data - data for learning
+		tasklist - current tasks
 	'''
 	predicts = []
 	regrs = [LinearRegression, Ridge, Lasso]
 	for d in tasklist:
-		optimal_task, tasks = find_similar_name_log(data, d)
-		X, y = prepareData(tasks, ['complete', 'type'], 'starttime')
+		optimal_task, tasks = find_similar_name_log(data, d['task'])
+		#X, y = prepareData(tasks, ['complete', 'type'], 'starttime')
+		#print(optimal_task['starttime'])
+		del d['task']
+		X,y = prepareData(data, d.keys(), 'starttime')
 		values = []
 		if len(tasks) > 1:
 			for r in regrs:
-				values.append(Regression(X, y, [optimal_task['complete'], optimal_task['type']], r))
+				values.append(Regression(X, y, [d['time'], d['type']], r))
 			predicts.append(simple_distance(values, [0,1,2,3]))
 		else:
 			predicts.append(-1)
 	return predicts
 
-#TODO, make function for recommendation for better task on this time
 
-#data = loadData("../task_data.json")
-#find_similar_name_log(data, 'Try to complete homework')
+def planning_task_list(data):
+	tasklist = make_clear_data(data)
+	store = loadData('../task_data.json')
+	plan = planning_tasks(store, tasklist)
 
-#data = loadData("../task_data.json")
-#print(planning_tasks(data, ["Watch tv", "walking", "Study homework"]))
+
+def make_clear_data(data):
+	return [{'type': d['ttype'], 'task': d['tf'], 'time': int(d['deadline'])*60}
+		for d in data]
+
 
 
