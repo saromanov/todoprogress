@@ -10,7 +10,8 @@ from peewee import Model
 
 from pymongo import MongoClient
 
-from learning import predict_success, gaussianPredict, getData, findOptimalTime
+from learning import predict_success, gaussianPredict, getData, findOptimalTime, \
+planning_task_list
 from util import *
 from db import DB
 
@@ -135,19 +136,23 @@ def tag_info(tag=None):
 	dtasks = dbdata.getByTag2(tag)
 	return render_template('tag.html', tag=tag, tasks=dtasks)
 
+tasks = []
 @app.route('/planning', methods=("GET", "POST"))
 def planning():
 	form = PlanningForm()
-	tasks = []
 	if request.method == 'POST':
 		if 'add' in request.form:
 			tasks.append(request.form)
+			return render_template('planning.html', form=form, entasks=tasks)
 		if 'compute' in request.form:
-			return 'TODO'
+			planning_task_list(tasks)
+			return "A"
+		if 'clearall' in request.form:
+			tasks.clear()
+			return render_template('planning.html', form=form)
 	else:
 		form = PlanningForm()
-		#setattr(PlanningForm, 'plan0', TextField("Plan", [DataRequired("Enter your task")]))
-		return render_template('planning.html', form=form, plans=['plan0'])
+		return render_template('planning.html', form=form)
 
 
 @app.route('/task', methods=("GET", "POST"))

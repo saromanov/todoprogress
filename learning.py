@@ -8,6 +8,7 @@ import numpy as np
 import json
 import os
 from math import log, sqrt
+from util import numberToTime
 
 def loadData(path):
 	if not os.path.isfile(path):
@@ -198,24 +199,32 @@ def planning_tasks(data, tasklist):
 	regrs = [LinearRegression, Ridge, Lasso]
 	for d in tasklist:
 		optimal_task, tasks = find_similar_name_log(data, d['task'])
-		#X, y = prepareData(tasks, ['complete', 'type'], 'starttime')
-		#print(optimal_task['starttime'])
+		currenttask = d['task']
 		del d['task']
 		X,y = prepareData(data, d.keys(), 'starttime')
 		values = []
 		if len(tasks) > 1:
 			for r in regrs:
 				values.append(Regression(X, y, [d['time'], d['type']], r))
-			predicts.append(simple_distance(values, [0,1,2,3]))
+			predicts.append((currenttask, simple_distance(values, [0,1,2,3])))
 		else:
 			predicts.append(-1)
 	return predicts
+
+
+def show_planning_tasks(data):
+	result = []
+	for d in data:
+		taskname, optime = d
+		result.append(taskname, numberToTime(optime))
+	return result
 
 
 def planning_task_list(data):
 	tasklist = make_clear_data(data)
 	store = loadData('../task_data.json')
 	plan = planning_tasks(store, tasklist)
+	return show_planning_task_list(plan)
 
 
 def make_clear_data(data):
