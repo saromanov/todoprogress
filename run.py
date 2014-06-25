@@ -145,8 +145,11 @@ def planning():
 			tasks.append(request.form)
 			return render_template('planning.html', form=form, entasks=tasks)
 		if 'compute' in request.form:
-			planning_task_list(tasks)
-			return "A"
+			if len(tasks) > 1:
+				return render_template('planning.html', form=form, 
+					plantasks=planning_task_list(tasks))
+			else:
+				return redirect('planning')
 		if 'clearall' in request.form:
 			tasks.clear()
 			return render_template('planning.html', form=form)

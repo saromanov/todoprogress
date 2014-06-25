@@ -208,7 +208,7 @@ def planning_tasks(data, tasklist):
 				values.append(Regression(X, y, [d['time'], d['type']], r))
 			predicts.append((currenttask, simple_distance(values, [0,1,2,3])))
 		else:
-			predicts.append(-1)
+			predicts.append((currenttask,-1))
 	return predicts
 
 
@@ -216,7 +216,7 @@ def show_planning_tasks(data):
 	result = []
 	for d in data:
 		taskname, optime = d
-		result.append(taskname, numberToTime(optime))
+		result.append((taskname, numberToTime(optime)))
 	return result
 
 
@@ -224,12 +224,11 @@ def planning_task_list(data):
 	tasklist = make_clear_data(data)
 	store = loadData('../task_data.json')
 	plan = planning_tasks(store, tasklist)
-	return show_planning_task_list(plan)
+	return show_planning_tasks(plan)
 
 
 def make_clear_data(data):
 	return [{'type': d['ttype'], 'task': d['tf'], 'time': int(d['deadline'])*60}
 		for d in data]
-
 
 

@@ -11,6 +11,9 @@
 {% block content %}
 <h1> Введите список задач </h1>
 	<div class="container-fluid">
+	<div class="row-fluid">
+	<div class="form-group">
+	<strong> Название задачи </strong>
 	<form action="" method="post" name="plantask">
 	{{ form.tf }} <br><br>
 	{{ form.ttype }} <br><br>
@@ -21,6 +24,13 @@
 	<input type="submit" name='clearall' value="Очистить" class="btn btn-large btn-primary">
 	</input>
 	</form>
+	</div>
+	</div>
+	<div class="pull-right">
+		{% for task in plantasks %}
+		 <p> {{task[0]}} - {{task[1]}} </p>
+		{% endfor %}
+	</div>
 	</div>
 
 	<div class="container-fluid">
