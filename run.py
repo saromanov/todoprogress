@@ -4,7 +4,8 @@ from contextlib import closing
 from flask_bootstrap import Bootstrap
 from flask_wtf import Form, RecaptchaField
 from wtforms import TextField, HiddenField, ValidationError,\
- SubmitField, IntegerField, FormField, TextAreaField, SelectField, validators, DateTimeField
+ SubmitField, IntegerField, FormField, TextAreaField, SelectField, validators, DateTimeField,\
+ PasswordField
 from wtforms.validators import Required, DataRequired, InputRequired
 from peewee import Model
 
@@ -38,6 +39,9 @@ db = mongo.todo_db
 tasks = db.tasks
 trash = db.trash
 dbdata = DB(tasks, trash)
+
+
+#Move ths stuff to models file
 class TodoForm(Form):
 	tf = TextField("Task")
 	descr = TextField("Desription")
@@ -76,6 +80,11 @@ class PlanningForm(Form):
 	tf = TextField("Task")
 	ttype = TypeOfTaskField
 	deadline = TextField("deadline", description="A")
+
+
+class Login(Form):
+	nick = TextField("nickname")
+	password = PasswordField("password")
 
 @app.route("/", methods=("GET", "POST"))
 def main():
@@ -166,6 +175,11 @@ def task():
 			#dbdata.append(123, request.form)
 	bff = BeforeTaskForm()
 	return render_template('task.html', form=bff)
+
+@app.route('/login', methods=("GET", "POST"))
+def login():
+	login = Login()
+	return render_template('login', form=login)
 
 #TODO добавить отдельно базу для выполненных и текущих задач
 #Предсказание оптимального времени выполнения задач
