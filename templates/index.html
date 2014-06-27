@@ -29,7 +29,7 @@
       {% if task.starttime >= thisdate %}
          <span style="color: blue;">
          <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
-          {{ task.task }} {{ task.starttime }}
+          {{ task.task }} {{ task.starttime }} ({{task.starttime - thisdate}})
         </span>
       {% elif task.priority == 2 %}
         <span style="color: red;">

@@ -113,10 +113,10 @@ def main():
 		#a little "survey" after completion of task. Of course, need for prediction
 		if 'Complete' in request.form:
 			taskname = list(request.form.keys())[0]
+			print('THis is completevalue, ...')
 			bff = BeforeTaskForm()
-			return redirect(url_for('task'))
-			#return render_template("task.html", form=bff, taskname=taskname)
-		else:
+			return render_template("task.html", form=bff, taskname=taskname)
+		elif 'Remove' in request.form:
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\

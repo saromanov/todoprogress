@@ -22,7 +22,7 @@ class DB:
 			'description': request.form["descr"],\
 			'date': datetime.datetime.utcnow(),\
 			'mark':0,\
-			'iscomplete': '',\
+			'complete':0,\
 			'priority':priorityToNumber(request.form["priority_field"]),\
 			'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
 				int(request.form["deadline"])),\
