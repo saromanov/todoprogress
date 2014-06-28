@@ -8,7 +8,8 @@ import numpy as np
 import json
 import os
 from math import log, sqrt
-from util import numberToTime
+from util import numberToTime, strToTime
+from datetime import timedelta
 
 def loadData(path):
 	if not os.path.isfile(path):
@@ -219,19 +220,34 @@ def show_planning_tasks(data):
 		result.append((taskname, numberToTime(optime)))
 	return result
 
+def prepare_to_greedy(data):
+	result = []
+	for d in data:
+		result.append((d['tf'], strToTime(d['starttime']), 
+			strToTime(d['endtime']), int(d['deadline'])))
+	return result
+
 def greedy_approach(data):
 	'''Plannin optimal task list without ml algorithms,
 	but only with  greedy approach
 	'''
+	resdata = prepare_to_greedy(data)
 	result = []
-	for i in range(len(data)):
-		pass
+	last = 1
+	result.append(1)
+	for current in range(2,len(data)):
+		first = resdata[current]
+		if (first[1] + timedelta(hours=first[3])) >= resdata[last][2]:
+			result.append(current)
+			last = current
+	return list(map(lambda x: resdata[x][0], result))
 
 def planning_task_list(data):
 	tasklist = make_clear_data(data)
 	store = loadData('../task_data.json')
 	plan = planning_tasks(store, tasklist)
 	greedy = greedy_approach(data)
+	print(greedy)
 	return show_planning_tasks(plan)
 
 
@@ -239,17 +255,5 @@ def make_clear_data(data):
 	return [{'type': d['ttype'], 'task': d['tf'], 'time': int(d['deadline'])*60}
 		for d in data]
 
-
-values = [{'tf': 'Изучение нейронных сетей', 'deadline': '4', 'ttype': 0},
-{'tf': 'Подготовка к экзамену', 'deadline':3, 'ttype':0},
-{'tf': 'Просмотр игры престолов', 'deadline':1, 'ttype':3}]
-planning_task_list(values)
-#TODO, make function for recommendation for better task on this time
-
-#data = loadData("../task_data.json")
-#find_similar_name_log(data, 'Try to complete homework')
-
-#data = loadData("../task_data.json")
-#print(planning_tasks(data, ["Watch tv", "walking", "Study homework"]))
 
 
