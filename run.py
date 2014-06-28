@@ -80,6 +80,9 @@ class PlanningForm(Form):
 	tf = TextField("Task")
 	ttype = TypeOfTaskField
 	deadline = TextField("deadline", description="A")
+	starttime = DateTimeField(default=defaultTime)
+	endtime = DateTimeField(default=defaultTime)
+
 
 
 class Login(Form):
@@ -112,10 +115,12 @@ def main():
 
 		#a little "survey" after completion of task. Of course, need for prediction
 		if 'Complete' in request.form:
-			taskname = list(request.form.keys())[0]
-			print('THis is completevalue, ...')
+			data = list(request.form.keys())
+			if len(data) == 1:
+				return redirect('/')
+			taskname = data[0]
 			bff = BeforeTaskForm()
-			return render_template("task.html", form=bff, taskname=taskname)
+			return render_template("list.html", form=bff, taskname=taskname)
 		elif 'Remove' in request.form:
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
@@ -186,3 +191,4 @@ def login():
 if __name__ == '__main__':
 	Bootstrap(app)
 	app.run()
+

@@ -17,6 +17,8 @@
 	<form action="" method="post" name="plantask">
 	{{ form.tf }} <br><br>
 	{{ form.ttype }} <br><br>
+	<strong>Промежуток выполнения</strong><br>
+	{{ form.starttime }} - {{form.endtime}} <br><br>
 	{{ form.deadline }}<br><br>
 	<input type="submit" name='add' value="Добавить задачу" class="btn btn-large btn-primary"></input>
 	<input type="submit" name='compute' value="Рассчитать" class="btn btn-large btn-primary">

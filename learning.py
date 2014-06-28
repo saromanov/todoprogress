@@ -219,16 +219,37 @@ def show_planning_tasks(data):
 		result.append((taskname, numberToTime(optime)))
 	return result
 
+def greedy_approach(data):
+	'''Plannin optimal task list without ml algorithms,
+	but only with  greedy approach
+	'''
+	result = []
+	for i in range(len(data)):
+		pass
 
 def planning_task_list(data):
 	tasklist = make_clear_data(data)
 	store = loadData('../task_data.json')
 	plan = planning_tasks(store, tasklist)
+	greedy = greedy_approach(data)
 	return show_planning_tasks(plan)
 
 
 def make_clear_data(data):
 	return [{'type': d['ttype'], 'task': d['tf'], 'time': int(d['deadline'])*60}
 		for d in data]
+
+
+values = [{'tf': 'Изучение нейронных сетей', 'deadline': '4', 'ttype': 0},
+{'tf': 'Подготовка к экзамену', 'deadline':3, 'ttype':0},
+{'tf': 'Просмотр игры престолов', 'deadline':1, 'ttype':3}]
+planning_task_list(values)
+#TODO, make function for recommendation for better task on this time
+
+#data = loadData("../task_data.json")
+#find_similar_name_log(data, 'Try to complete homework')
+
+#data = loadData("../task_data.json")
+#print(planning_tasks(data, ["Watch tv", "walking", "Study homework"]))
 
 
