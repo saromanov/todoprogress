@@ -1,5 +1,6 @@
 import datetime
 from time import mktime, time, strptime
+import builtins
 
 #Some helpful functions
 
@@ -95,3 +96,15 @@ def completeToNumber(iscomplete):
 		return 1
 
 
+def roundStartTime(data):
+	if type(data) == builtins.str:
+		data = strToTime(data)
+	value = lambda minu: data + datetime.timedelta(minutes=minu)
+	result = data.minute
+	if result % 5 == 0:
+		return value(5)
+	c = 0
+	for x in range(1,5):
+		c += 1
+		if (result+c) % 5 == 0:
+			return value(c)

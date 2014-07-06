@@ -49,7 +49,7 @@ class TodoForm(Form):
 	priority_field = SelectField("Priority of task", choices = (("middle", "Middle"),\
 		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
-	starttime = DateTimeField(default=defaultTime)
+	starttime = DateTimeField(default= roundStartTime(datetime.datetime.now()))
 
 	#Replace for vetter solution
 	deadline = IntegerField("Deadline")
