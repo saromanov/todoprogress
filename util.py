@@ -60,6 +60,13 @@ def checkDeadline(data):
 	dt = datetime.datetime.fromtimestamp(mktime(value))
 	return dt - datetime.datetime.now()
 
+def isValidStartTime(data):
+	result = 0
+	try:
+		result = 0 if checkDeadline(data) < datetime.timedelta() else 1
+		return result
+	except Exception as e:
+		return result
 
 def strToTime(timedata):
 	try:
@@ -86,6 +93,5 @@ def completeToNumber(iscomplete):
 		return 0
 	if iscomplete == 'yes':
 		return 1
-
 
 

@@ -95,6 +95,7 @@ def main():
 	sf = SearchForm()
 	if request.method == 'POST':
 		if len(form.tf.data) != 0:
+			assert(isValidStartTime(request.form['starttime']) == 1)
 			dbdata.addTask(request)
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
