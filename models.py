@@ -38,8 +38,8 @@ class BeforeTaskForm(Form):
 	'''
 
 	#Replace for better solution
-	task_id = TextField("task")
-	mark = IntegerField("Your mark")
+	task_id = TextField("task", [validators.required()])
+	mark = IntegerField("Your mark", [validators.required(), validators.length(max=10)])
 	iscomplete = SelectField("This task was complete before deadline?", choices=(\
 		("no", "No"),
 		("yes", "Yes")))

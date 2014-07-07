@@ -58,14 +58,16 @@ def main():
 			data = list(request.form.keys())
 			if len(data) == 1:
 				return redirect('/')
+			data.remove('Complete')
 			taskname = data[0]
-			bff = BeforeTaskForm()
-			return render_template("list.html", form=bff, taskname=taskname)
+			session['taskname'] = taskname
+			return redirect(url_for('task'))
+			#return render_template("task.html", form=bff, taskname=taskname)
 		elif 'Remove' in request.form:
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
-				value="alert alert-success", message=RECOMMEND_MESSAGE)
+				message=RECOMMEND_MESSAGE)
 	tags = dbdata.getTags()
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
@@ -116,15 +118,17 @@ def planning():
 def task():
 	if request.method == 'POST':
 		if 'append' in request.form:
+			#Write in base
 			return "A"
 			#dbdata.append(123, request.form)
 	bff = BeforeTaskForm()
-	return render_template('task.html', form=bff)
+	idtask = dbdata.find_by_name(session['taskname'])[0]['_id']
+	return render_template('task.html', form=bff, taskname=session['taskname'], idtask=idtask)
 
 @app.route('/login', methods=("GET", "POST"))
 def login():
 	login = Login()
-	return render_template('login', form=login)
+	return render_template('login.html', form=login)
 
 #TODO добавить отдельно базу для выполненных и текущих задач
 #Предсказание оптимального времени выполнения задач
