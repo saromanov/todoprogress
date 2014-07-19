@@ -22,6 +22,8 @@ class TodoForm(Form):
 	priority_field = SelectField("Priority of task", choices = (("middle", "Middle"),\
 		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
+	#Attached task without timing
+	attached = SelectField("Attach task", choices = (("yes", "Yes"), ("no", "No")))
 	starttime = DateTimeField(default= roundStartTime(datetime.datetime.now()))
 
 	#Replace for vetter solution
