@@ -20,8 +20,8 @@
   <form action="" method="post" name="progresstask">
    <ul class="list-group">
     <li class="list-group-item">
-    <span class="badge">{{ taskcount }}</span>
-      Текущие задачи
+      <span class="badge">{{ taskcount }}</span>
+         Текущие задачи
     </li>
   </ul>
     {% for task in tasks %}
@@ -37,8 +37,9 @@
           {{ task.deadline - thisdate }}
         </span>
       {% else %}
-       <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task}}
-       {{ task.deadline - thisdate}}
+       <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
+       <h4 class="list-group-item-heading">{{ task.task }}</h4>
+        <p class="list-group-item-text">{{ task.deadline - thisdate }}</p>
       {% endif %}
 	   </label>
     {% endfor %}
