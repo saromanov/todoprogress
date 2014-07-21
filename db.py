@@ -3,31 +3,33 @@ import datetime
 import pymongo
 from bson.objectid import ObjectId
 from util import priorityToNumber, completeToNumber, checkDeadline, strToTime
+from schema import getSchema1, getSchema2
 
 class DB:
-	def __init__(self, dbdata, trash):
+	def __init__(self, dbdata):
 		'''
 			dbdata - the main db for store information about tasks
 			trash - tasks for remove, store after removeTasks
 		'''
-		self._dbdata = dbdata
-		self._trash = trash
+		self._dbdata = dbdata.tasks
+		self._trash = dbdata.tasks
+		self._attached = dbdata.attached
 
 	def addTask(self, request):
 		dir_tags = request.form["tags"]
 		tags = dir_tags.replace(' ','').split(',') if len(dir_tags) > 0 else None
-		self._dbdata.insert({
-			'task': request.form["tf"],\
-			'type':request.form["type_of_task"],\
-			'description': request.form["descr"],\
-			'date': datetime.datetime.utcnow(),\
-			'mark':0,\
-			'complete':0,\
-			'priority':priorityToNumber(request.form["priority_field"]),\
-			'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
-				int(request.form["deadline"])),\
-			'tags': tags,
-			'starttime': strToTime(request.form["starttime"])})
+		if request.form['attached'] == 'no':
+			self._dbdata.insert(getSchema1(request, tags))
+		else:
+			#Почитать про добавление в различные базы для
+			#Группы закреплённые
+			self._appendAttachedTask(getSchema2(request))
+
+	def _appendAttachedTask(self, schema):
+		self._attached.insert(schema)
+
+	def getAttachedTasks(self):
+		return self._attached.find_one()
 
 	def _appendData(self, taskid, field, value):
 		'''

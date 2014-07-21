@@ -25,7 +25,7 @@ mongo = MongoClient()
 db = mongo.todo_db
 tasks = db.tasks
 trash = db.trash
-dbdata = DB(tasks, trash)
+dbdata = DB(db)
 
 
 @app.route("/", methods=("GET", "POST"))
@@ -39,7 +39,7 @@ def main():
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
-			result = gaussianPredict(targetFields, \
+			'''result = gaussianPredict(targetFields, \
 				[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"]),\
 				timeToNumber()], "complete")
 			if result == 0 and timeToNumber(request.form['starttime']) != result:
@@ -47,11 +47,11 @@ def main():
 				rec_time = findOptimalTime(targetFields, \
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
 					"complete")
-				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
+				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))'''
 			return render_template("index.html", form=form, sf=sf,
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				message=message,\
-				value=alert)
+				value=alert, attached=dbdata.getAttachedTasks())
 
 		#a little "survey" after completion of task. Of course, need for prediction
 		if 'Complete' in request.form:
@@ -69,9 +69,11 @@ def main():
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				message=RECOMMEND_MESSAGE)
 	tags = dbdata.getTags()
+	dbdata.getAttachedTasks()
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
-		tags = tags, taskcount=len(dbdata.tasks_by_deadline_priority()))
+		tags = tags, taskcount=len(dbdata.tasks_by_deadline_priority()),\
+		attached=dbdata.getAttachedTasks())
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
