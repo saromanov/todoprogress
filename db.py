@@ -23,13 +23,13 @@ class DB:
 		else:
 			#Почитать про добавление в различные базы для
 			#Группы закреплённые
-			self._appendAttachedTask(getSchema2(request))
+			self._attached.insert(getSchema2(request))
 
 	def _appendAttachedTask(self, schema):
 		self._attached.insert(schema)
 
 	def getAttachedTasks(self):
-		return self._attached.find_one()
+		return list(self._attached.find())
 
 	def _appendData(self, taskid, field, value):
 		'''

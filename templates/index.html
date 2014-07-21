@@ -51,7 +51,11 @@
       <span class="badge">{{ taskattachcount }}</span>
          Закреплённые задачи
          {% for task in attached %}
-            <p> {{ task }} </p>
+          <label class="checkbox inline">
+            <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
+            <h4 class="list-group-item-heading">{{ task.task }}</h4>
+            <p class="list-group-item-text">{{ task.description }}</p>
+          </label>
          {% endfor %}
     </li>
 </div>
