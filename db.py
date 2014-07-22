@@ -3,7 +3,7 @@ import datetime
 import pymongo
 from bson.objectid import ObjectId
 from util import priorityToNumber, completeToNumber, checkDeadline, strToTime
-from schema import getSchema1, getSchema2
+from schema import getSchema1, getSchema2, getSchema3
 
 class DB:
 	def __init__(self, dbdata):
@@ -14,6 +14,7 @@ class DB:
 		self._dbdata = dbdata.tasks
 		self._trash = dbdata.tasks
 		self._attached = dbdata.attached
+		self._training = dbdata.training
 
 	def addTask(self, request):
 		dir_tags = request.form["tags"]
@@ -101,3 +102,9 @@ class DB:
 				for t in td['tags']:
 					tags.append(t)
 		return set(tags)
+
+
+	#Append in training set for predict optimal tasks
+	def appendinTS(self, request, data):
+		schema = getSchema3(request, data)
+		self._training.insert(schema)

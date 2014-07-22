@@ -27,6 +27,9 @@ tasks = db.tasks
 trash = db.trash
 dbdata = DB(db)
 
+#For complete task prepare to append in training set
+ct = []
+
 
 @app.route("/", methods=("GET", "POST"))
 def main():
@@ -115,17 +118,20 @@ def planning():
 		form = PlanningForm()
 		return render_template('planning.html', form=form)
 
-
 @app.route('/task', methods=("GET", "POST"))
 def task():
 	if request.method == 'POST':
 		if 'append' in request.form:
-			#Write in base
-			return "A"
-			#dbdata.append(123, request.form)
+			#Append in training set
+			if len(ct) > 0:
+				comptask = ct.pop()
+				comptask['complete'] = '1'
+				dbdata.appendinTS(request, comptask)
+			return redirect('/')
 	bff = BeforeTaskForm()
-	idtask = dbdata.find_by_name(session['taskname'])[0]['_id']
-	return render_template('task.html', form=bff, taskname=session['taskname'], idtask=idtask)
+	print(ct)
+	ct.append(dbdata.find_by_name(session['taskname'])[0])
+	return render_template('task.html', form=bff, taskname=session['taskname'])
 
 @app.route('/login', methods=("GET", "POST"))
 def login():
