@@ -23,7 +23,7 @@ class TodoForm(Form):
 		("low", "Low"), ("high", "High")))
 	tags = TextField("Tags")
 	#Attached task without timing
-	attached = SelectField("Attach task", choices = (("yes", "Yes"), ("no", "No")))
+	attached = SelectField("Attach task", choices = (("no", "No"), ("yes", "Yes")))
 	starttime = DateTimeField(default= roundStartTime(datetime.datetime.now()))
 
 	#Replace for vetter solution
@@ -38,13 +38,7 @@ class BeforeTaskForm(Form):
 	'''
 		Adding information after completion of task
 	'''
-
-	#Replace for better solution
-	task_id = TextField("task", [validators.required()])
 	mark = IntegerField("Your mark", [validators.required(), validators.length(max=10)])
-	iscomplete = SelectField("This task was complete before deadline?", choices=(\
-		("no", "No"),
-		("yes", "Yes")))
 
 
 

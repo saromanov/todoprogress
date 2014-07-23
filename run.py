@@ -73,9 +73,10 @@ def main():
 				message=RECOMMEND_MESSAGE)
 	tags = dbdata.getTags()
 	dbdata.getAttachedTasks()
+	tasks = dbdata.tasks_by_deadline_priority()
 	return render_template("index.html", form=form, sf=sf,
-		thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
-		tags = tags, taskcount=len(dbdata.tasks_by_deadline_priority()),\
+		thisdate=datetime.datetime.now(),tasks=tasks,\
+		tags = tags, taskcount=len(tasks),\
 		attached=dbdata.getAttachedTasks())
 
 @app.route("/list", methods=("GET", "POST"))
@@ -126,7 +127,8 @@ def task():
 			if len(ct) > 0:
 				comptask = ct.pop()
 				comptask['complete'] = '1'
-				dbdata.appendinTS(request, comptask)
+				dbdata.appendinTS(request.form, comptask)
+				dbdata.removeTasks([comptask['task']])
 			return redirect('/')
 	bff = BeforeTaskForm()
 	print(ct)
@@ -143,4 +145,6 @@ def login():
 if __name__ == '__main__':
 	Bootstrap(app)
 	app.run()
+
+
 

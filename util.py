@@ -7,19 +7,25 @@ import builtins
 RECOMMEND_MESSAGE = "Оптимальное время для начала задачи: {0}"
 RECOVER_MESSAGE = "Задачи удалены, но их можно восстановить"
 
-TIME_FORMAT = "%Y-%m-%d %H:%M"
+TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
 def timeToNumber(currtime=None):
 	'''
+		input: currtime in str format
+		output:
 		0 - morning
 		1 - afternoon
 		2 - evening
 		3 - night
+
+		example: 2014-07-23 20:42:43 => 2
 	'''
 	if currtime == None:
 		now = datetime.datetime.now().hour
-	else:
+	if type(currtime) == builtins.str:
 		now = strToTime(currtime).hour
+	else:
+		now = currtime.hour
 	if now >= 0 and now <= 5:
 		return 3
 	if now >= 6 and now <= 11:
@@ -57,9 +63,15 @@ def checkDeadline(data):
 		Check how much time is left to deadline
 		data - "2014-05-09 07:37:50"
 	'''
-	value = strptime(data, "%Y-%m-%d %H:%M:%S")
-	dt = datetime.datetime.fromtimestamp(mktime(value))
-	return dt - datetime.datetime.now()
+	return strToTime(data) - datetime.datetime.now()
+
+def isAfterDeadline(data):
+	'''
+	data - 2014-05-09 07:37:50
+	output: 1 is time for this task after deadline, 
+	1 in otherwise
+	'''
+	return data < datetime.datetime.now()
 
 def isValidStartTime(data):
 	result = 0
@@ -73,7 +85,7 @@ def strToTime(timedata):
 	try:
 		return datetime.datetime.fromtimestamp(mktime(strptime(timedata, TIME_FORMAT)))
 	except Exception:
-		return defaultTime()
+		raise 'Error in the time format'
 
 def defaultTime():
 	d = datetime.datetime.now()
@@ -108,3 +120,9 @@ def roundStartTime(data):
 		c += 1
 		if (result+c) % 5 == 0:
 			return value(c)
+
+def differenceToMinute(data):
+	res = datetime.datetime.now() - data
+	return divmod(res.days * 86400 + res.seconds, 60)[0]
+
+

@@ -1,5 +1,5 @@
 import datetime
-from util import priorityToNumber, strToTime, timeToNumber
+from util import priorityToNumber, strToTime, timeToNumber, differenceToMinute
 
 def getSchema1(request, tags):
 	'''
@@ -37,8 +37,8 @@ def getSchema3(request, data):
 	return {
 				'task': data['task'],\
 				'type':data["type"],\
-				'time': strToTime(data['starttime']) - datetime.datetime.utcnow(),\
-				'mark': request.form['mark'],
+				'time': differenceToMinute(data['starttime']),\
+				'mark': '0' if request['mark']=='' else request['mark'],
 				'complete': data['complete'],
 				'starttime': timeToNumber(data['starttime'])
 			}

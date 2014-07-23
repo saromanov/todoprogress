@@ -18,12 +18,9 @@
 
 <div class="row-fluid">
   <form action="" method="post" name="suform">
-    <h2> Task title </h2>
-    {{ form.task_id }}
+  	<h2> Информация о задаче: {{ taskname }} </h2>
     <h2> Your mark before task complete </h2>
     {{ form.mark }}
-    <h2> This task was complete before deadline? </h2>
-    {{ form.iscomplete }}
     <p><input type="submit" value="Add" name='append' class="btn btn-large btn-primary"></p>
   </form>
 </div>

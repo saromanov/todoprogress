@@ -2,8 +2,9 @@
 import datetime
 import pymongo
 from bson.objectid import ObjectId
-from util import priorityToNumber, completeToNumber, checkDeadline, strToTime
 from schema import getSchema1, getSchema2, getSchema3
+from util import priorityToNumber, completeToNumber, checkDeadline, strToTime,\
+isAfterDeadline
 
 class DB:
 	def __init__(self, dbdata):
@@ -50,6 +51,12 @@ class DB:
 		return list(self._dbdata.find())
 
 	def tasks_by_deadline_priority(self):
+		ctasks = self.tasks()
+		before = list(filter(lambda x: isAfterDeadline(x['deadline']), ctasks))
+		request = {'mark':'0'}
+		for data in before:
+			data['complete'] = '0'
+			self.appendinTS(request, data)
 		return list(self._dbdata.find({'deadline': {'$gt': datetime.datetime.now()}})\
 		                .sort('priority', pymongo.DESCENDING))
 
@@ -108,3 +115,4 @@ class DB:
 	def appendinTS(self, request, data):
 		schema = getSchema3(request, data)
 		self._training.insert(schema)
+
