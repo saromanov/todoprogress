@@ -2,6 +2,7 @@ from flask import Flask, request, session, g, redirect, url_for, abort, render_t
 import sqlite3
 from contextlib import closing
 from pymongo import MongoClient
+from pymongo.errors import PyMongoError
 
 from learning import predict_success, gaussianPredict, getData, findOptimalTime, \
 planning_task_list
@@ -21,12 +22,16 @@ SECRET_KEY = 'secret'
 app = Flask(__name__)
 app.config.from_object(__name__)
 
-mongo = MongoClient()
+
+try:
+	mongo = MongoClient()
+except Exception as e:
+	raise PyMongoError("Error in mongo connecion. Check")
+
 db = mongo.todo_db
 tasks = db.tasks
 trash = db.trash
 dbdata = DB(db)
-
 #For complete task prepare to append in training set
 ct = []
 
@@ -97,6 +102,10 @@ def show_list():
 def tag_info(tag=None):
 	dtasks = dbdata.getByTag2(tag)
 	return render_template('tag.html', tag=tag, tasks=dtasks)
+
+@app.route('/task_<idd>', methods=("GET", "POST"))
+def task_info(idd=None):
+	return "Append for this" + idd
 
 tasks = []
 @app.route('/planning', methods=("GET", "POST"))

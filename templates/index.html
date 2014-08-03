@@ -29,16 +29,20 @@
       {% if task.starttime >= thisdate %}
          <span style="color: blue;">
          <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
-          {{ task.task }} {{ task.starttime }} ({{task.starttime - thisdate}})
+           <a href={{ task.id }}> task_{{ task.task}}</a>
+          {{ task.starttime }} ({{task.starttime - thisdate}})
         </span>
       {% elif task.priority == 2 %}
         <span style="color: red;">
-		      <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> {{ task.task}}
+		      <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> 
+          <a href={{ task.id }}> {{ task.task}}</a>
           {{ task.deadline - thisdate }}
         </span>
       {% else %}
        <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
-       <h4 class="list-group-item-heading">{{ task.task }}</h4>
+       <h4 class="list-group-item-heading">
+         <a href=task_{{ task.id }}> {{ task.task}}</a>
+        </h4>
         <p class="list-group-item-text">{{ task.deadline - thisdate }}</p>
       {% endif %}
 	   </label>
@@ -53,7 +57,9 @@
          {% for task in attached %}
           <label class="checkbox inline">
             <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
-            <h4 class="list-group-item-heading">{{ task.task }}</h4>
+            <h4 class="list-group-item-heading">
+             <a href={{ task.id }}> {{ task.task}}</a>
+            </h4>
             <p class="list-group-item-text">{{ task.description }}</p>
           </label>
          {% endfor %}

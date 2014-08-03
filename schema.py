@@ -1,5 +1,5 @@
 import datetime
-from util import priorityToNumber, strToTime, timeToNumber, differenceToMinute
+from util import priorityToNumber, strToTime, timeToNumber, differenceToMinute, genTaskId
 
 def getSchema1(request, tags):
 	'''
@@ -16,7 +16,8 @@ def getSchema1(request, tags):
 				'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
 					int(request.form["deadline"])),\
 				'tags': tags,
-				'starttime': strToTime(request.form["starttime"])
+				'starttime': strToTime(request.form["starttime"]),
+				'id': genTaskId()
 			}
 
 def getSchema2(request):
@@ -28,6 +29,7 @@ def getSchema2(request):
 				'type':request.form["type_of_task"],\
 				'description': request.form["descr"],\
 				'date': datetime.datetime.utcnow(),\
+				'id': genTaskId()
 			}
 
 def getSchema3(request, data):

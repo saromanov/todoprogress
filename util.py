@@ -1,6 +1,7 @@
 import datetime
 from time import mktime, time, strptime
 import builtins
+from uuid import uuid4
 
 #Some helpful functions
 
@@ -124,5 +125,9 @@ def roundStartTime(data):
 def differenceToMinute(data):
 	res = datetime.datetime.now() - data
 	return divmod(res.days * 86400 + res.seconds, 60)[0]
+
+
+def genTaskId():
+	return str(uuid4())
 
 
