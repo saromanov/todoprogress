@@ -16,6 +16,7 @@
 <input type="submit" name='Comment' value="Добавить комментарий" class="btn btn-large btn-primary">
 </form>
 {% for comment in task.comments %}
-
+ <strong>{{ comment.author }} - {{ comment.date }}</strong>
+ <p> {{ comment.comment }} </p>
 {% endfor %}
 {% endblock %}

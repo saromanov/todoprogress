@@ -2,7 +2,7 @@
 import datetime
 import pymongo
 from bson.objectid import ObjectId
-from schema import getSchema1, getSchema2, getSchema3
+from schema import getSchema1, getSchema2, getSchema3, getSchema4
 from util import priorityToNumber, completeToNumber, checkDeadline, strToTime,\
 isAfterDeadline
 
@@ -33,11 +33,13 @@ class DB:
 	def getAttachedTasks(self):
 		return list(self._attached.find())
 
-	def _appendData(self, taskid, field, value):
+	def _appendData(self, taskid, field,schema, action='$add'):
 		'''
 		 	append data for task
 		'''
-		self._dbdata.update({'id': taskid},{'$set': {field: value}}, upsert=False)
+		self._dbdata.update({'id': taskid},{action: {field: schema}}, upsert=False)
+
+
 
 	def append(self, taskid, fields):
 		for field in fields:
@@ -47,8 +49,8 @@ class DB:
 					value = completeToNumber(value)
 				self._appendData(taskid, field, completeToNumber(fields[field]))
 
-	def appendData(self, taskid, field, value):
-		self._appendData(taskid, field, value)
+	def appendData(self, taskid, field, request):
+		self._appendData(taskid, field, getSchema4(request), '$addToSet')
 
 	def tasks(self, *args, **kwargs):
 		return list(self._dbdata.find())

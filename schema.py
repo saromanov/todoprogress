@@ -17,7 +17,8 @@ def getSchema1(request, tags):
 					int(request.form["deadline"])),\
 				'tags': tags,
 				'starttime': strToTime(request.form["starttime"]),
-				'id': genTaskId()
+				'id': genTaskId(),
+				'comments': []
 			}
 
 def getSchema2(request):
@@ -44,3 +45,14 @@ def getSchema3(request, data):
 				'complete': data['complete'],
 				'starttime': timeToNumber(data['starttime'])
 			}
+
+
+def getSchema4(request):
+	'''
+		Schema for comments in task page
+	'''
+	return {
+		'author': 'default',
+		'comment': request['comment'],
+		'date': datetime.datetime.now()
+	}
