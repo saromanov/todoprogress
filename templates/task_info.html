@@ -1,0 +1,21 @@
+{% extends "bootstrap/base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+{% import "bootstrap/fixes.html" as fixes %}
+
+{% block content %}
+
+<form action="" method="post">
+<legend> Информация о задаче: {{ task.task }} </legend>
+
+<p> Время начала задачи: {{ task.starttime }} </p>
+<p> Время завершения задачи: {{ task.deadline }} </p> <br><br>
+
+<p> Добавить комментарий </p>
+{{ forminfo.comment(rows=5, cols=50) }}
+<br><br>
+<input type="submit" name='Comment' value="Добавить комментарий" class="btn btn-large btn-primary">
+</form>
+{% for comment in task.comments %}
+
+{% endfor %}
+{% endblock %}

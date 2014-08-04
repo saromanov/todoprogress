@@ -37,7 +37,7 @@ class DB:
 		'''
 		 	append data for task
 		'''
-		self._dbdata.update({'_id': ObjectId(taskid)},{'$set': {field: value}}, upsert=False)
+		self._dbdata.update({'id': taskid},{'$set': {field: value}}, upsert=False)
 
 	def append(self, taskid, fields):
 		for field in fields:
@@ -46,6 +46,9 @@ class DB:
 				if field == 'iscomplete':
 					value = completeToNumber(value)
 				self._appendData(taskid, field, completeToNumber(fields[field]))
+
+	def appendData(self, taskid, field, value):
+		self._appendData(taskid, field, value)
 
 	def tasks(self, *args, **kwargs):
 		return list(self._dbdata.find())
@@ -68,7 +71,13 @@ class DB:
 			x['complete'] == 0 else None, self.tasks()))
 
 	def find_by_name(self, name):
-		return list(self._dbdata.find({'task': name}))
+		return self._find('name', name)
+
+	def find_by_id(self, idvalue):
+		return self._dbdata.find_one({'id': idvalue})
+
+	def _find(self, field, data):
+		return list(self._dbdata.find({field: data}).sort(field))
 
 	def removeTasks(self, tasks, recover=True):
 		'''

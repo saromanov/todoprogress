@@ -105,7 +105,12 @@ def tag_info(tag=None):
 
 @app.route('/task_<idd>', methods=("GET", "POST"))
 def task_info(idd=None):
-	return "Append for this" + idd
+	if request.method == 'POST':
+		dbdata.appendData(idd, 'comments', request.form['comment'])
+		return redirect('task_{0}'.format(idd))
+	task = dbdata.find_by_id(idd)
+	info = TaskInfoForm()
+	return render_template('task_info.html', task=task, forminfo=info)
 
 tasks = []
 @app.route('/planning', methods=("GET", "POST"))

@@ -57,3 +57,7 @@ class PlanningForm(Form):
 class Login(Form):
 	nick = TextField("nickname")
 	password = PasswordField("password")
+
+
+class TaskInfoForm(Form):
+	comment = TextAreaField()
