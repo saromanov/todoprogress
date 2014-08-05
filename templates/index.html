@@ -29,13 +29,13 @@
       {% if task.starttime >= thisdate %}
          <span style="color: blue;">
          <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
-           <a href={{ task.id }}> task_{{ task.task}}</a>
+           <a href=task_{{ task.id }}> {{ task.task}}</a>
           {{ task.starttime }} ({{task.starttime - thisdate}})
         </span>
       {% elif task.priority == 2 %}
         <span style="color: red;">
 		      <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}"> 
-          <a href={{ task.id }}> {{ task.task}}</a>
+          <a href=task_{{ task.id }}> {{ task.task}}</a>
           {{ task.deadline - thisdate }}
         </span>
       {% else %}
@@ -83,9 +83,9 @@
   <h2> Attach this task </h2>
   {{ form.attached }}
   <h2> Start time </h2>
-  {{ form.starttime }}
+  {{ form.starttime(value= currentTime()) }}
   <h2> Deadline (in hours) </h2>
-  {{ form.deadline }}
+  {{ form.deadline() }}
   <h2> Choice priority of task </h2>
   {{ form.priority_field}}
 
