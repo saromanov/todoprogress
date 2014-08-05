@@ -88,8 +88,7 @@ def strToTime(timedata):
 	except Exception:
 		raise 'Error in the time format'
 
-def defaultTime():
-	d = datetime.datetime.now()
+def defaultTime(d=datetime.datetime.now()):
 	return d.strptime(d.strftime(TIME_FORMAT), TIME_FORMAT)
 
 
@@ -121,6 +120,10 @@ def roundStartTime(data):
 		c += 1
 		if (result+c) % 5 == 0:
 			return value(c)
+
+def roundStartTimeNow():
+	d = datetime.datetime.now()
+	return roundStartTime(datetime.datetime.now().strptime(d.strftime(TIME_FORMAT), TIME_FORMAT))
 
 def differenceToMinute(data):
 	res = datetime.datetime.now() - data

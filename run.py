@@ -38,7 +38,7 @@ ct = []
 
 @app.route("/", methods=("GET", "POST"))
 def main():
-	app.jinja_env.globals.update(currentTime=defaultTime)
+	app.jinja_env.globals.update(currentTime=roundStartTimeNow)
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
