@@ -4,7 +4,7 @@ from contextlib import closing
 from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
-from learning import predict_success, gaussianPredict, getData, findOptimalTime, \
+from learning import predict_success, Predict, getData, findOptimalTime, \
 planning_task_list
 from util import *
 from models import *
@@ -48,15 +48,15 @@ def main():
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
-			'''result = gaussianPredict(targetFields, \
+			result = Predict(targetFields, "complete", \
 				[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"]),\
-				timeToNumber()], "complete")
+				timeToNumber()])
 			if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"
 				rec_time = findOptimalTime(targetFields, \
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
 					"complete")
-				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))'''
+				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
 			return render_template("index.html", form=form, sf=sf,
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				message=message,\

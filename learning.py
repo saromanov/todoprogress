@@ -142,22 +142,29 @@ def gaussianPredict(fields, target_data, cand):
 	 	X, y = prepareData(data, ["starttime", "time", "type"], "complete")
 	 	gaussianPredict(X, y, [2, 100, 2])
 	 '''
-
-	#Change to load from mongo
-	data = loadData("../task_data.json")
-	data,target = prepareData(data, fields, cand)
 	funcs = [GaussianNB, MultinomialNB, BernoulliNB]
 	minmissing = 99999999
 	resultNB = None
+	predvalue = None
 	for nNB in funcs:
 		bayes = nNB()
-		fitting = bayes.fit(data, target)
-		pred = fitting.predict(data)
-		missing = (target != pred).sum()
+		fitting = bayes.fit(fields, target_data)
+		pred = fitting.predict(cand)
+		missing = (target_data != pred).sum()
 		if missing < minmissing:
 			minmissing = missing
 			resultNB = fitting
-	return resultNB.predict(target_data)[0]
+			predvalue = pred
+	return predvalue
+
+
+def Predict(fields, targ_field, cand):
+	'''
+		TODO: Return list of similar tasks
+	'''
+	fields = loadData("../task_data.json")
+	X, y = prepareData(data, ["starttime", "time", "type"], "complete")
+	return gaussianPredict(X, y, cand)
 
 #Find optimal time for success this task
 def findOptimalTime(fields, target, cand):
