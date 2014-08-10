@@ -64,6 +64,16 @@
           </label>
          {% endfor %}
     </li>
+
+    <li class="list-group-item">
+         Цепь задач
+          <label class="checkbox inline">
+            <input type="checkbox" name="{{ chain.task }}" value="{{ chain.task }}">
+            <h4 class="list-group-item-heading">
+             <a href={{ chain.id }}> {{ chain.task}}</a>
+            </h4>
+          </label>
+    </li>
 </div>
 
   </form>
@@ -90,7 +100,8 @@
   {{ form.priority_field}}
 
   <br><br>
-  <p><input type="submit" value="Add" class="btn btn-large btn-primary"></p>
+  <p><input type="submit" name="Add" value="Добавить задачу" class="btn btn-large btn-primary"></p>
+  <p><input type="submit" name="AddChain" value="Добавить в цепь" class="btn btn-large btn-primary"></p>
 
   </div>
   </div>

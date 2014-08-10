@@ -10,7 +10,7 @@ RECOVER_MESSAGE = "Задачи удалены, но их можно восст�
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
-def timeToNumber(currtime=None):
+def timeToNumber(currtime=datetime.datetime.now()):
 	'''
 		input: currtime in str format
 		output:
@@ -21,8 +21,6 @@ def timeToNumber(currtime=None):
 
 		example: 2014-07-23 20:42:43 => 2
 	'''
-	if currtime == None:
-		now = datetime.datetime.now().hour
 	if type(currtime) == builtins.str:
 		now = strToTime(currtime).hour
 	else:
@@ -132,5 +130,4 @@ def differenceToMinute(data):
 
 def genTaskId():
 	return str(uuid4())
-
 

@@ -42,7 +42,7 @@ def main():
 	form = TodoForm()
 	sf = SearchForm()
 	if request.method == 'POST':
-		if len(form.tf.data) != 0:
+		if 'Add' in request.form:
 			assert(isValidStartTime(request.form['starttime']) == 1)
 			dbdata.addTask(request)
 			alert = "alert alert-success"
@@ -57,10 +57,15 @@ def main():
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
 					"complete")
 				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
+				print(message)
 			return render_template("index.html", form=form, sf=sf,
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				message=message,\
 				value=alert, attached=dbdata.getAttachedTasks())
+
+		if 'AddChain' in request.form:
+			dbdata.addTaskInChain(request)
+			return render_template('index.html', form=form)
 
 		#a little "survey" after completion of task. Of course, need for prediction
 		if 'Complete' in request.form:
@@ -75,15 +80,16 @@ def main():
 		elif 'Remove' in request.form:
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
-				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
-				message=RECOMMEND_MESSAGE)
+				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority())
 	tags = dbdata.getTags()
 	dbdata.getAttachedTasks()
 	tasks = dbdata.tasks_by_deadline_priority()
+	fromchain = dbdata.getFromChain()
+	print("FROM CHAIN, ...", fromchain)
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=tasks,\
 		tags = tags, taskcount=len(tasks),\
-		attached=dbdata.getAttachedTasks())
+		attached=dbdata.getAttachedTasks(), chain=fromchain)
 
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
@@ -107,7 +113,8 @@ def tag_info(tag=None):
 @app.route('/task_<idd>', methods=("GET", "POST"))
 def task_info(idd=None):
 	if request.method == 'POST':
-		dbdata.appendData(idd, 'comments', request.form)
+		if len(request.form['comment']) > 0:
+			dbdata.appendData(idd, 'comments', request.form)
 		return redirect('task_{0}'.format(idd))
 	task = dbdata.find_by_id(idd)
 	info = TaskInfoForm()
@@ -161,5 +168,8 @@ if __name__ == '__main__':
 	Bootstrap(app)
 	app.run()
 
+
+#Добавить стэк задач (новая задача, активируется, когда завершается текущая)
+#Добавить возможность повторения задач
 
 

@@ -16,16 +16,29 @@ class DB:
 		self._trash = dbdata.tasks
 		self._attached = dbdata.attached
 		self._training = dbdata.training
+		self._chains = dbdata.chains
+
+	def _getTags(self, tags):
+		return tags.replace(' ','').split(',') if len(tags) > 0 else None
 
 	def addTask(self, request):
-		dir_tags = request.form["tags"]
-		tags = dir_tags.replace(' ','').split(',') if len(dir_tags) > 0 else None
+		tags = self._getTags(request.form["tags"])
 		if request.form['attached'] == 'no':
 			self._dbdata.insert(getSchema1(request, tags))
 		else:
 			#Почитать про добавление в различные базы для
 			#Группы закреплённые
 			self._attached.insert(getSchema2(request))
+
+	def addTaskInChain(self, request):
+		'''
+			In future, can be several chains
+		'''
+		tags = self._getTags(request.form["tags"])
+		self._chains.update({'name': 'default'}, {'$push': {'tasks': getSchema1(request, tags)}})
+
+	def getFromChain(self):
+		return self._chains.find_one()['tasks']
 
 	def _appendAttachedTask(self, schema):
 		self._attached.insert(schema)
