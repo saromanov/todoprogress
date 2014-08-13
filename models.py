@@ -24,7 +24,9 @@ class TodoForm(Form):
 	tags = TextField("Tags")
 	#Attached task without timing
 	attached = SelectField("Attach task", choices = (("no", "No"), ("yes", "Yes")))
-	starttime = DateTimeField(default= roundStartTime(datetime.datetime.now()))
+	deadlinefield = SelectField("Strdeadline", choices=(("endday", "Конец дня"), \
+		("endweek", "Конец недели"), ("endmonth", "Конец месяца")))
+	starttime = DateTimeField()
 
 	#Replace for vetter solution
 	deadline = IntegerField("Deadline")
