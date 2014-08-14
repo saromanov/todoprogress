@@ -6,6 +6,7 @@ from schema import getSchema1, getSchema2, getSchema3, getSchema4
 from util import priorityToNumber, completeToNumber, checkDeadline, strToTime,\
 isAfterDeadline, Fail, Success, deadlineToTime
 
+
 class DB:
 	def __init__(self, dbdata):
 		'''
