@@ -10,6 +10,20 @@ RECOVER_MESSAGE = "Задачи удалены, но их можно восст�
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
+class Success:
+	''' 
+		Success class, if operation is well done
+	''' 
+	def __init__(self, obj):
+		self.obj = obj
+
+class Fail:
+	'''
+		If operation is fail on some of stage
+	'''
+	def __init__(self, message):
+		self.message = message
+
 def timeToNumber(currtime=datetime.datetime.now()):
 	'''
 		input: currtime in str format
@@ -130,4 +144,25 @@ def differenceToMinute(data):
 
 def genTaskId():
 	return str(uuid4())
+
+
+def deadlineToTime(param):
+	now = datetime.datetime.now()
+	if param == 'endday':
+		cur = datetime.datetime(year=now.year, month=now.month, \
+			day=now.day, hour=23, minute=59, second=59)
+		return (cur - now).total_seconds()/3600
+	if param == 'endweek':
+		cur = datetime.datetime(year=now.year, month=now.month, \
+			day=now.day + 7 - now.weekday(), hour=23, minute=59, second=59)
+		return cur - now
+	if param == 'endmonth':
+		import calendar
+		v, res = calendar.monthrange(now.year, now.month)
+		cur = datetime.datetime(year=now.year, month=now.month, \
+			day=res, hour=23, minute=59, second=59)
+		return cur - now
+
+
+
 
