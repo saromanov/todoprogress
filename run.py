@@ -44,12 +44,14 @@ def main():
 	if request.method == 'POST':
 		if 'Add' in request.form:
 			assert(isValidStartTime(request.form['starttime']) == 1)
-			dbdata.addTask(request)
+			isadded = dbdata.addTask(request)
+			if isinstance(isadded, Fail):
+				return isadded.message
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
 			result = Predict(targetFields, "complete", \
-				[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"]),\
+				[isadded.obj,typeToNumber(request.form["type_of_task"]),\
 				timeToNumber()])
 			if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"

@@ -1,7 +1,7 @@
 import datetime
 from util import priorityToNumber, strToTime, timeToNumber, differenceToMinute, genTaskId
 
-def getSchema1(request, tags):
+def getSchema1(request, tags, deadline):
 	'''
 		Schema for typical task
 	'''
@@ -13,8 +13,7 @@ def getSchema1(request, tags):
 				'mark':0,\
 				'complete':0,\
 				'priority':priorityToNumber(request.form["priority_field"]),\
-				'deadline': datetime.datetime.now() + datetime.timedelta(hours = \
-					int(request.form["deadline"])),\
+				'deadline': deadline,\
 				'tags': tags,
 				'starttime': strToTime(request.form["starttime"]),
 				'id': genTaskId(),

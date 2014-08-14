@@ -162,8 +162,8 @@ def Predict(fields, targ_field, cand):
 	'''
 		TODO: Return list of similar tasks
 	'''
-	fields = loadData("../task_data.json")
-	X, y = prepareData(data, ["starttime", "time", "type"], "complete")
+	data = loadData("../task_data.json")
+	X, y = prepareData(data, fields, targ_field)
 	return gaussianPredict(X, y, cand)
 
 #Find optimal time for success this task

@@ -4,7 +4,8 @@ import pymongo
 from bson.objectid import ObjectId
 from schema import getSchema1, getSchema2, getSchema3, getSchema4
 from util import priorityToNumber, completeToNumber, checkDeadline, strToTime,\
-isAfterDeadline
+isAfterDeadline, Fail, Success, deadlineToTime
+
 
 
 
@@ -23,12 +24,24 @@ class DB:
 	def _getTags(self, tags):
 		return tags.replace(' ','').split(',') if len(tags) > 0 else None
 
-	def check_testing(self):
-		pass
+	def _checkTypeDeadline(self, request):
+		'''
+			Check if type of deadline is structed or in hour
+		'''
+		if request['deadline'] == '':
+			return Success(deadlineToTime(request['deadlinefield']))
+		else:
+			return Success(datetime.datetime.now() + datetime.timedelta(hours = \
+				int(request["deadline"])))
+
 	def addTask(self, request):
 		tags = self._getTags(request.form["tags"])
+		deadline = self._checkTypeDeadline(request.form)
+		if isinstance(deadline, Fail):
+			return Fail(deadline.message)
+		dedalineobj = deadline.obj
 		if request.form['attached'] == 'no':
-			self._dbdata.insert(getSchema1(request, tags))
+			self._dbdata.insert(getSchema1(request, tags, dedalineobj))
 		else:
 			#Почитать про добавление в различные базы для
 			#Группы закреплённые
@@ -111,7 +124,6 @@ class DB:
 	def _storeToTrash(self, tasksdata):
 		result = self._dbdata.find_one({'task': tasksdata})
 		if result != None:
-			print("THIS task was append: ")
 			self._trash.insert(result)
 		#self._trash.insert({'taskname': tasksdata})
 
