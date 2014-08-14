@@ -6,6 +6,8 @@ from schema import getSchema1, getSchema2, getSchema3, getSchema4
 from util import priorityToNumber, completeToNumber, checkDeadline, strToTime,\
 isAfterDeadline
 
+
+
 class DB:
 	def __init__(self, dbdata):
 		'''
@@ -21,6 +23,8 @@ class DB:
 	def _getTags(self, tags):
 		return tags.replace(' ','').split(',') if len(tags) > 0 else None
 
+	def check_testing(self):
+		pass
 	def addTask(self, request):
 		tags = self._getTags(request.form["tags"])
 		if request.form['attached'] == 'no':
