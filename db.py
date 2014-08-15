@@ -42,10 +42,10 @@ class DB:
 		dedalineobj = deadline.obj
 		if request.form['attached'] == 'no':
 			self._dbdata.insert(getSchema1(request, tags, dedalineobj))
+			return deadline
 		else:
-			#Почитать про добавление в различные базы для
-			#Группы закреплённые
 			self._attached.insert(getSchema2(request))
+			return deadline
 
 	def addTaskInChain(self, request):
 		'''
@@ -56,6 +56,9 @@ class DB:
 
 	def getFromChain(self):
 		return self._chains.find_one()['tasks']
+
+	def endTaskFromChain(self, request):
+		print(self._chains.find_one({'name': 'defaule'}))
 
 	def _appendAttachedTask(self, schema):
 		self._attached.insert(schema)
@@ -120,6 +123,9 @@ class DB:
 			for t in tasks:
 				self._storeToTrash(self.find_by_name(t))
 				self._dbdata.remove({'task': t})
+
+	def removeAll(self):
+		self._dbdata.remove()
 
 	def _storeToTrash(self, tasksdata):
 		result = self._dbdata.find_one({'task': tasksdata})

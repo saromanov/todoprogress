@@ -51,8 +51,7 @@ def main():
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
 			result = Predict(targetFields, "complete", \
-				[isadded.obj,typeToNumber(request.form["type_of_task"]),\
-				timeToNumber()])
+				[timeToNumber(isadded.obj), 5, typeToNumber(request.form["type_of_task"])])
 			if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"
 				rec_time = findOptimalTime(targetFields, \
@@ -65,9 +64,13 @@ def main():
 				message=message,\
 				value=alert, attached=dbdata.getAttachedTasks())
 
+		''' Добавить в цепь задач'''
 		if 'AddChain' in request.form:
 			dbdata.addTaskInChain(request)
 			return render_template('index.html', form=form)
+
+		if 'EndChain' in request.form:
+			dbdata.endTaskFromChain(request)
 
 		#a little "survey" after completion of task. Of course, need for prediction
 		if 'Complete' in request.form:
@@ -83,11 +86,12 @@ def main():
 			dbdata.removeTasks(request.form)
 			return render_template("index.html", form=form, \
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority())
+	
 	tags = dbdata.getTags()
+	dbdata.removeAll()
 	dbdata.getAttachedTasks()
 	tasks = dbdata.tasks_by_deadline_priority()
 	fromchain = dbdata.getFromChain()
-	print("FROM CHAIN, ...", fromchain)
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=tasks,\
 		tags = tags, taskcount=len(tasks),\
