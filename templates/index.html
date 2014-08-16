@@ -65,16 +65,18 @@
          {% endfor %}
     </li>
 
+    {% if chain %}
     <li class="list-group-item">
          Цепь задач
           <label class="checkbox inline">
-            <input type="checkbox" name="{{ chain.task }}" value="{{ chain.task }}">
+            <input type="checkbox" name="{{ chain[0].task }}" value="{{ chain.task }}">
             <h4 class="list-group-item-heading">
-             <a href={{ chain.id }}> {{ chain.task}}</a>
+             <a href=chain_{{ chain[0].id }}> {{ chain[0].task}}</a>
             </h4>
           </label>
       <button name="EndChain">Завершить задачу</button>
     </li>
+    {% endif %}
 </div>
 
   </form>

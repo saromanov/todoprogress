@@ -51,15 +51,32 @@ class DB:
 		'''
 			In future, can be several chains
 		'''
+		deadline = self._checkTypeDeadline(request.form)
+		if isinstance(deadline, Fail):
+			return Fail(deadline.message)
+		dedalineobj = deadline.obj
 		tags = self._getTags(request.form["tags"])
-		self._chains.update({'name': 'default'}, {'$push': {'tasks': getSchema1(request, tags)}})
+		if self.isEmptyTaskChain():
+			self._chains.insert({'name': 'default', 'tasks': [getSchema1(request, tags, dedalineobj)]})
+		else:	
+			self._chains.update({'name': 'default'}, {'$push': {'tasks': getSchema1(request, tags, dedalineobj)}})
+
+	def isEmptyTaskChain(self, id='default'):
+		tasks = self.getFromChain()
+		return True if tasks == None else False
+
+	def removeChainById(self, idd='default'):
+		self._chains.remove({'name': idd})
 
 	def getFromChain(self):
-		return self._chains.find_one()['tasks']
+		tasks = self._chains.find_one()
+		if tasks != None and 'tasks' in tasks:
+			return tasks['tasks']
 
 	def endTaskFromChain(self, request):
-		print(self._chains.find_one({'name': 'defaule'}))
-
+		for rec in request:
+			if rec != 'EndChain':
+				self._chains.update({'name': 'default'}, {'$pull': {'tasks': {'task': rec}}})
 	def _appendAttachedTask(self, schema):
 		self._attached.insert(schema)
 

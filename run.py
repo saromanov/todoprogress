@@ -70,7 +70,8 @@ def main():
 			return render_template('index.html', form=form)
 
 		if 'EndChain' in request.form:
-			dbdata.endTaskFromChain(request)
+			print("RESULT: ")
+			dbdata.endTaskFromChain(request.form)
 
 		#a little "survey" after completion of task. Of course, need for prediction
 		if 'Complete' in request.form:
@@ -88,7 +89,7 @@ def main():
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority())
 	
 	tags = dbdata.getTags()
-	dbdata.removeAll()
+	#dbdata.removeChainById()
 	dbdata.getAttachedTasks()
 	tasks = dbdata.tasks_by_deadline_priority()
 	fromchain = dbdata.getFromChain()
@@ -125,6 +126,13 @@ def task_info(idd=None):
 	task = dbdata.find_by_id(idd)
 	info = TaskInfoForm()
 	return render_template('task_info.html', task=task, forminfo=info)
+
+@app.route('/chain_<idd>', methods=("GET", "POST"))
+def chain_info(idd=None):
+	if request.method == 'POST':
+		pass
+	tasks = dbdata.getFromChain()
+	return render_template('chain.html', tasks=tasks)
 
 tasks = []
 @app.route('/planning', methods=("GET", "POST"))
