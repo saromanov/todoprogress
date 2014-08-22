@@ -151,7 +151,7 @@ def deadlineToTime(param):
 	if param == 'endday':
 		cur = datetime.datetime(year=now.year, month=now.month, \
 			day=now.day, hour=23, minute=59, second=59)
-		return (cur - now).total_seconds()/3600
+		return cur - now
 	if param == 'endweek':
 		cur = datetime.datetime(year=now.year, month=now.month, \
 			day=now.day + 7 - now.weekday(), hour=23, minute=59, second=59)
