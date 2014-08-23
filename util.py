@@ -7,6 +7,7 @@ from uuid import uuid4
 
 RECOMMEND_MESSAGE = "Оптимальное время для начала задачи: {0}"
 RECOVER_MESSAGE = "Задачи удалены, но их можно восстановить"
+REMOVE_MESSAGE = "Задач{0} удален{1}"
 
 TIME_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -147,21 +148,30 @@ def genTaskId():
 
 
 def deadlineToTime(param):
+	'''
+		Compute time for structed deadline
+	'''
 	now = datetime.datetime.now()
+	settime = lambda cur, now: now+(cur - now)
 	if param == 'endday':
 		cur = datetime.datetime(year=now.year, month=now.month, \
 			day=now.day, hour=23, minute=59, second=59)
-		return cur - now
+		return settime(cur, now)
 	if param == 'endweek':
 		cur = datetime.datetime(year=now.year, month=now.month, \
 			day=now.day + 7 - now.weekday(), hour=23, minute=59, second=59)
-		return cur - now
+		return settime(cur, now)
 	if param == 'endmonth':
 		import calendar
 		v, res = calendar.monthrange(now.year, now.month)
 		cur = datetime.datetime(year=now.year, month=now.month, \
 			day=res, hour=23, minute=59, second=59)
-		return cur - now
+		return settime(cur, now)
+
+
+def getRemoveMessage(count):
+	return REMOVE_MESSAGE.format('а','а') if count == 2 else \
+		   REMOVE_MESSAGE.format('и', 'ы')
 
 
 

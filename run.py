@@ -52,13 +52,13 @@ def main():
 			targetFields = ["starttime", "time", "type"]
 			result = Predict(targetFields, "complete", \
 				[timeToNumber(isadded.obj), 5, typeToNumber(request.form["type_of_task"])])
+			print(result)
 			if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"
 				rec_time = findOptimalTime(targetFields, \
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
 					"complete")
 				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
-				print(message)
 			return render_template("index.html", form=form, sf=sf,
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				message=message,\
@@ -70,7 +70,6 @@ def main():
 			return render_template('index.html', form=form)
 
 		if 'EndChain' in request.form:
-			print("RESULT: ")
 			dbdata.endTaskFromChain(request.form)
 
 		#a little "survey" after completion of task. Of course, need for prediction
@@ -82,11 +81,13 @@ def main():
 			taskname = data[0]
 			session['taskname'] = taskname
 			return redirect(url_for('task'))
-			#return render_template("task.html", form=bff, taskname=taskname)
 		elif 'Remove' in request.form:
 			dbdata.removeTasks(request.form)
+			message = getRemoveMessage(len(request.form))
+			alert = "alert alert-info"
 			return render_template("index.html", form=form, \
-				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority())
+				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
+				message = message, value=alert)
 	
 	tags = dbdata.getTags()
 	#dbdata.removeChainById()
@@ -135,6 +136,7 @@ def chain_info(idd=None):
 	return render_template('chain.html', tasks=tasks)
 
 tasks = []
+#Optimal planning for list of tasks
 @app.route('/planning', methods=("GET", "POST"))
 def planning():
 	form = PlanningForm()

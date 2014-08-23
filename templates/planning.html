@@ -17,8 +17,9 @@
 	<form action="" method="post" name="plantask">
 	{{ form.tf }} <br><br>
 	{{ form.ttype }} <br><br>
-	<strong>Промежуток выполнения</strong><br>
+	<strong>Промежуток выполнения задачи</strong><br>
 	{{ form.starttime }} - {{form.endtime}} <br><br>
+	<strong>Время на выполнение </strong>
 	{{ form.deadline }}<br><br>
 	<input type="submit" name='add' value="Добавить задачу" class="btn btn-large btn-primary"></input>
 	<input type="submit" name='compute' value="Рассчитать" class="btn btn-large btn-primary">
@@ -37,7 +38,10 @@
 
 	<div class="container-fluid">
 	{% for t in entasks %}
-	<p> {{ t.tf }} </p>
+	<strong>Название задачи:</strong>
+	<p> {{ t.tf }}</p>
+	<strong>Время на выполнение</strong>
+	<p> {{ t.deadline}}
 	{% endfor %}
 	</div>
 {% endblock %}
