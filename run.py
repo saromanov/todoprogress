@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
 from learning import predict_success, Predict, getData, findOptimalTime, \
-planning_task_list
+planning_task_list, greedy_approach
 from util import *
 from models import *
 from db import DB
@@ -142,10 +142,24 @@ def planning():
 	form = PlanningForm()
 	if request.method == 'POST':
 		if 'add' in request.form:
-			tasks.append(request.form)
-			return render_template('planning.html', form=form, entasks=tasks)
+			if request.form['deadline'] == '':
+				alert = "alert alert-warning"
+				message = "Поле время на выполнение не заполнено"
+				return render_template('planning.html', form=form, entasks=tasks, 
+					value=alert, message=message)
+			value = request.form['deadline']
+			try:
+				result = int(value)
+				tasks.append(request.form)
+				return render_template('planning.html', form=form, entasks=tasks)
+			except ValueError:
+				alert = "alert alert-warning"
+				message = "Поле время на выполнение заполнено неверно"
+				return render_template('planning.html', form=form, entasks=tasks, 
+					value=alert, message=message)
 		if 'compute' in request.form:
 			if len(tasks) > 1:
+				greedy_approach(tasks)
 				return render_template('planning.html', form=form, 
 					plantasks=planning_task_list(tasks))
 			else:
