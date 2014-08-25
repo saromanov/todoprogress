@@ -151,6 +151,7 @@ def deadlineToTime(param):
 	'''
 		Compute time for structed deadline
 	'''
+	import calendar
 	now = datetime.datetime.now()
 	settime = lambda cur, now: now+(cur - now)
 	if param == 'endday':
@@ -158,11 +159,17 @@ def deadlineToTime(param):
 			day=now.day, hour=23, minute=59, second=59)
 		return settime(cur, now)
 	if param == 'endweek':
-		cur = datetime.datetime(year=now.year, month=now.month, \
-			day=now.day + 7 - now.weekday(), hour=23, minute=59, second=59)
+		v, res = calendar.monthrange(now.year, now.month)
+		weekday = now.day + 7 - now.weekday()
+		month = now.month
+		day = now.day
+		if weekday > res:
+			month = now.month + 1
+			day = weekday - res
+		cur = datetime.datetime(year=now.year, month=month, \
+			day=day, hour=23, minute=59, second=59)
 		return settime(cur, now)
 	if param == 'endmonth':
-		import calendar
 		v, res = calendar.monthrange(now.year, now.month)
 		cur = datetime.datetime(year=now.year, month=now.month, \
 			day=res, hour=23, minute=59, second=59)
@@ -172,6 +179,7 @@ def deadlineToTime(param):
 def getRemoveMessage(count):
 	return REMOVE_MESSAGE.format('а','а') if count == 2 else \
 		   REMOVE_MESSAGE.format('и', 'ы')
+
 
 
 
