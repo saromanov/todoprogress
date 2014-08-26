@@ -254,7 +254,6 @@ def planning_task_list(data):
 	store = loadData('../task_data.json')
 	plan = planning_tasks(store, tasklist)
 	greedy = greedy_approach(data)
-	print(greedy)
 	return show_planning_tasks(plan)
 
 

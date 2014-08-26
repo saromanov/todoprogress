@@ -178,7 +178,6 @@ def task():
 				dbdata.removeTasks([comptask['task']])
 			return redirect('/')
 	bff = BeforeTaskForm()
-	print(ct)
 	ct.append(dbdata.find_by_name(session['taskname'])[0])
 	return render_template('task.html', form=bff, taskname=session['taskname'])
 
