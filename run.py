@@ -52,7 +52,6 @@ def main():
 			targetFields = ["starttime", "time", "type"]
 			result = Predict(targetFields, "complete", \
 				[timeToNumber(isadded.obj), 5, typeToNumber(request.form["type_of_task"])])
-			print(result)
 			if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"
 				rec_time = findOptimalTime(targetFields, \
@@ -102,15 +101,11 @@ def main():
 @app.route("/list", methods=("GET", "POST"))
 def show_list():
 	dtasks = dbdata.tasks()
-	size = len(dtasks)
-	rem_size = len(dbdata.fromTrash())
-	bftform = BeforeTaskForm()
 	if request.method ==  'POST':
 		task_id = request.form['task_id']
 		dbdata.append(task_id, request.form)
 		#dbdata.append
-	return render_template("list.html", bftform = bftform, tasks=zip(dtasks, list(range(size))),\
-		trash=zip(dbdata.fromTrash(), list(range(rem_size))))
+	return render_template("list.html", tasks=dtasks, attasks=dbdata.getAttachedTasks())
 
 
 @app.route('/<tag>_tag', methods=("GET", "POST"))
@@ -201,5 +196,6 @@ if __name__ == '__main__':
 
 #Добавить стэк задач (новая задача, активируется, когда завершается текущая)
 #Добавить возможность повторения задач
+
 
 
