@@ -8,8 +8,9 @@ import numpy as np
 import json
 import os
 from math import log, sqrt
-from util import numberToTime, strToTime
+from util import numberToTime, strToTime, timeToNumber
 from datetime import timedelta
+import itertools
 
 def loadData(path):
 	if not os.path.isfile(path):
@@ -230,17 +231,23 @@ def show_planning_tasks(data):
 def prepare_to_greedy(data):
 	result = []
 	for d in data:
-		result.append((d['tf'], strToTime(d['starttime']), 
+		result.append((strToTime(d['starttime']), 
 			strToTime(d['endtime']), int(d['deadline'])))
 	return result
 
+def prepare_to_greedy2(data):
+	return [[res[2] * 60, timeToNumber(res[0]), res[3]] for res in data],\
+		   [[res[0], res[1], res[2] * 60, res[3]] for res in data]
+
 def greedy_approach(data):
-	'''Plannin optimal task list without ml algorithms,
-	but only with  greedy approach
 	'''
-	resdata = prepare_to_greedy(data)
+	Plannin optimal task list without ml algorithms,
+	but only with "naive" greedy approach
+	'''
+	#resdata = prepare_to_greedy(data)
+	resdata = data
 	result = []
-	last = 1
+	last = 0
 	result.append(1)
 	for current in range(2,len(data)):
 		first = resdata[current]
@@ -249,7 +256,17 @@ def greedy_approach(data):
 			last = current
 	return list(map(lambda x: resdata[x][0], result))
 
+
+def getOptimalTime(task):
+	store = loadData('../task_data.json')
+	data = prepareData(store, ['time', 'starttime', 'type'], 'complete')
+	#Cluster?
+
+
 def planning_task_list(data):
+	'''
+		list of tasks to optimal time for working on them
+	'''
 	tasklist = make_clear_data(data)
 	store = loadData('../task_data.json')
 	plan = planning_tasks(store, tasklist)
@@ -260,6 +277,24 @@ def planning_task_list(data):
 def make_clear_data(data):
 	return [{'type': d['ttype'], 'task': d['tf'], 'time': int(d['deadline'])*60}
 		for d in data]
+
+
+def test_greedy():
+	import datetime
+	t1 = datetime.timedelta(hours=24)
+	t2 = datetime.timedelta(hours=12)
+	t3 = datetime.timedelta(hours=48)
+	now = datetime.datetime.now()
+	data = [[now, (now + t1), 5,0], [now, (now + t1),2,2], \
+	[now, (now + t2),1,2], \
+	[now, (now + t3), 4,0], [now, (now + t1),3,0]]
+	prep, tolearn = prepare_to_greedy2(data)
+	getOptimalTime(prep)
+	#greedy_approach(data)
+
+
+#getOptimalTime(4)
+test_greedy()
 
 
 
