@@ -143,15 +143,16 @@ def planning():
 				return render_template('planning.html', form=form, entasks=tasks, 
 					value=alert, message=message)
 			value = request.form['deadline']
+			getform = request.form
+			if time_planning(getform['starttime'], getform['endtime']):
+				return error_planning('Ошибка во времени задачи', form)
 			try:
 				result = int(value)
 				tasks.append(request.form)
 				return render_template('planning.html', form=form, entasks=tasks)
 			except ValueError:
-				alert = "alert alert-warning"
-				message = "Поле время на выполнение заполнено неверно"
-				return render_template('planning.html', form=form, entasks=tasks, 
-					value=alert, message=message)
+				return error_planning("Поле время на выполнение заполнено неверно", form)
+
 		if 'compute' in request.form:
 			if len(tasks) > 1:
 				greedy_approach(tasks)
@@ -165,6 +166,15 @@ def planning():
 	else:
 		form = PlanningForm()
 		return render_template('planning.html', form=form)
+
+def time_planning(sttime, endtime):
+	gett = lambda x: strToTime(x)
+	return gett(sttime) == gett(endtime)
+
+def error_planning(message, form):
+	alert = "alert alert-warning"
+	return render_template('planning.html', form=form, entasks=tasks, 
+		value=alert, message=message)
 
 @app.route('/task', methods=("GET", "POST"))
 def task():
