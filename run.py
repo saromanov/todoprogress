@@ -50,14 +50,14 @@ def main():
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
-			result = Predict(targetFields, "complete", \
+			'''result = Predict(targetFields, "complete", \
 				[timeToNumber(isadded.obj), 5, typeToNumber(request.form["type_of_task"])])
 			if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"
 				rec_time = findOptimalTime(targetFields, \
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],
 					"complete")
-				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))
+				message = RECOMMEND_MESSAGE.format(numberToTime(rec_time))'''
 			return render_template("index.html", form=form, sf=sf,
 				thisdate=datetime.datetime.now(),tasks=dbdata.tasks_by_deadline_priority(),\
 				message=message,\
@@ -80,6 +80,11 @@ def main():
 			taskname = data[0]
 			session['taskname'] = taskname
 			return redirect(url_for('task'))
+
+		#Начать работать над задачей
+		if 'Work' in request.form:
+			return render_template('index.html', form=form)
+			
 		elif 'Remove' in request.form:
 			dbdata.removeTasks(request.form)
 			message = getRemoveMessage(len(request.form))
@@ -130,8 +135,10 @@ def chain_info(idd=None):
 	tasks = dbdata.getFromChain()
 	return render_template('chain.html', tasks=tasks)
 
+
 tasks = []
 #Optimal planning for list of tasks
+#TODO: Some breaks after complete of tasks
 @app.route('/planning', methods=("GET", "POST"))
 def planning():
 	form = PlanningForm()
@@ -142,8 +149,8 @@ def planning():
 				message = "Поле время на выполнение не заполнено"
 				return render_template('planning.html', form=form, entasks=tasks, 
 					value=alert, message=message)
-			value = request.form['deadline']
 			getform = request.form
+			value = getform['deadline']
 			if time_planning(getform['starttime'], getform['endtime']):
 				return error_planning('Ошибка во времени задачи', form)
 			try:
@@ -205,6 +212,8 @@ if __name__ == '__main__':
 
 #Добавить стэк задач (новая задача, активируется, когда завершается текущая)
 #Добавить возможность повторения задач
+
+#Подсказка, сколько может занять задача
 
 
 

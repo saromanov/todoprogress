@@ -56,6 +56,7 @@
     {% if tasks|length != 0 %}
        <input type="submit" name='Remove' value="Remove tasks" class="btn btn-large btn-primary"></p>
        <input type="submit" name='Complete' value="Task is complete" class="btn btn-large btn-primary"></p>
+       <input type="submit" name='Work' value="Working on task" class="btn btn-large btn-primary"></p>
     {% endif %}
     <li class="list-group-item">
       <span class="badge">{{ taskattachcount }}</span>
@@ -91,9 +92,9 @@
   <div class="panel-heading"><h2>Smart TODO monitor</h2></div>
   <div class="panel-body">
  <form action="" method="post" name="todoform">
-  <h2>Add new task</h2>
+  <h2>Добавить новую задачу</h2>
    {{ form.tf(size=50) }}
-  <h2>Description </h2>
+  <h2>Описание</h2>
    {{ form.descr(size=50) }}
   <h2> Type of task</h2>
    {{ form.type_of_task }}
@@ -105,6 +106,8 @@
   {{ form.starttime(value= currentTime()) }}
   <h2> Deadline (in hours) </h2>
   {{ form.deadline() }}
+  <h2>Ориентировочное время выполнения </h2>
+  {{ form.worktime }}
   <p> Или </p>
   {{ form.deadlinefield() }}
   <h2> Choice priority of task </h2>

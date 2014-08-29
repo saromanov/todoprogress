@@ -26,6 +26,7 @@ class TodoForm(Form):
 	attached = SelectField("Attach task", choices = (("no", "No"), ("yes", "Yes")))
 	deadlinefield = SelectField("Strdeadline", choices=(("endday", "Конец дня"), \
 		("endweek", "Конец недели"), ("endmonth", "Конец месяца")))
+	worktime = TextField("Worktime")
 	starttime = DateTimeField()
 
 	#Replace for vetter solution

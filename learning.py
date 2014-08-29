@@ -236,10 +236,10 @@ def prepare_to_greedy(data):
 	return result
 
 def prepare_to_greedy2(data):
-	return [[res[2] * 60, timeToNumber(res[0]), res[3]] for res in data],\
-		   [[res[0], res[1], res[2] * 60, res[3]] for res in data]
+	return [[res[2] * 60, timeToNumber(res[0]), res[3], res[4]] for res in data],\
+		   [[res[0], res[1], res[2] * 60, res[3], res[4]] for res in data]
 
-def greedy_approach(data):
+def greedy_approach(data, traindata):
 	'''
 	Plannin optimal task list without ml algorithms,
 	but only with "naive" greedy approach
@@ -249,18 +249,31 @@ def greedy_approach(data):
 	result = []
 	last = 0
 	result.append(1)
+
+	#List with "waiting events"
+	waitlist = []
+	resdata = sorted(data, key=lambda x: x[0] - x[1], reverse=True)
 	for current in range(2,len(data)):
 		first = resdata[current]
-		if (first[1] + timedelta(hours=first[3])) >= resdata[last][2]:
+		opt = isOptimal(first, traindata)
+		if first[0] <= resdata[last][0] and opt:
 			result.append(current)
 			last = current
-	return list(map(lambda x: resdata[x][0], result))
+	return list(map(lambda x: resdata[x][4], result))
 
+
+def isOptimal(task, train):
+	'''
+	TODO
+	Нахолждение оптимального времени для задачи
+	'''
+	return True
 
 def getOptimalTime(task):
 	store = loadData('../task_data.json')
 	data = prepareData(store, ['time', 'starttime', 'type'], 'complete')
-	#Cluster?
+	print(greedy_approach(task, data))
+
 
 
 def planning_task_list(data):
@@ -285,16 +298,14 @@ def test_greedy():
 	t2 = datetime.timedelta(hours=12)
 	t3 = datetime.timedelta(hours=48)
 	now = datetime.datetime.now()
-	data = [[now, (now + t1), 5,0], [now, (now + t1),2,2], \
-	[now, (now + t2),1,2], \
-	[now, (now + t3), 4,0], [now, (now + t1),3,0]]
+	data = [[now, (now + t1), 5,0, "A"], [now, (now + t1),2,2,"B"], \
+	[now, (now + t2),1,2,"C"], \
+	[now, (now + t3), 4,0,"D"], [now, (now + t1),3,0,"E"]]
 	prep, tolearn = prepare_to_greedy2(data)
-	getOptimalTime(prep)
+	getOptimalTime(tolearn)
 	#greedy_approach(data)
 
 
-#getOptimalTime(4)
-test_greedy()
 
 
 

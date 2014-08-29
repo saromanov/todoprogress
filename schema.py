@@ -16,6 +16,7 @@ def getSchema1(request, tags, deadline):
 				'deadline': deadline,\
 				'tags': tags,
 				'starttime': strToTime(request.form["starttime"]),
+				'worktime': request.form['worktime'],
 				'id': genTaskId(),
 				'comments': []
 			}
