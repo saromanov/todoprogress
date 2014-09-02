@@ -89,8 +89,6 @@ class DB:
 		'''
 		self._dbdata.update({'id': taskid},{action: {field: schema}}, upsert=False)
 
-
-
 	def append(self, taskid, fields):
 		for field in fields:
 			if field != 'task_id':
@@ -99,8 +97,14 @@ class DB:
 					value = completeToNumber(value)
 				self._appendData(taskid, field, completeToNumber(fields[field]))
 
+	def isWorking(self, taskname):
+		return self._dbdata.find_one({'task': taskname})['isworking'] == True
+
 	def appendData(self, taskid, field, request):
 		self._appendData(taskid, field, getSchema4(request), '$addToSet')
+
+	def updateTask(self, tasktitle, field, param):
+		self._dbdata.update({'task': tasktitle}, {'$set': {field: param}}, upsert=False)
 
 	def tasks(self, *args, **kwargs):
 		return list(self._dbdata.find())

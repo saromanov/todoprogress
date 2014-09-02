@@ -32,7 +32,13 @@
   </ul>
     {% for task in tasks %}
   	 <label class="checkbox inline">
-      {% if task.starttime >= thisdate %}
+      {% if task.isworking == True %}
+        <span style="color: green">
+          <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
+           <a href=task_{{ task.id }}> {{ task.task}}</a>
+          {{ task.starttime }} ({{task.starttime - thisdate}})
+        </span>
+      {% elif task.starttime >= thisdate %}
          <span style="color: blue;">
          <input type="checkbox" name="{{ task.task }}" value="{{ task.task }}">
            <a href=task_{{ task.id }}> {{ task.task}}</a>

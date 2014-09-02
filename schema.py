@@ -15,6 +15,8 @@ def getSchema1(request, tags, deadline):
 				'priority':priorityToNumber(request.form["priority_field"]),\
 				'deadline': deadline,\
 				'tags': tags,
+				'isworking': False,
+				'startworktime': datetime.datetime.utcnow(),
 				'starttime': strToTime(request.form["starttime"]),
 				'worktime': request.form['worktime'],
 				'id': genTaskId(),

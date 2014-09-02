@@ -83,6 +83,14 @@ def main():
 
 		#Начать работать над задачей
 		if 'Work' in request.form:
+			data = request.form
+			for value in data:
+				if value != 'Work':
+					setwork = lambda x,value: dbdata.updateTask(value, 'isworking', x)
+					if dbdata.isWorking(value):
+						setwork(False,value)
+					else:
+						setwork(True,value)
 			return render_template('index.html', form=form)
 			
 		elif 'Remove' in request.form:
