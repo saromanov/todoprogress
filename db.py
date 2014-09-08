@@ -61,6 +61,12 @@ class DB:
 		else:	
 			self._chains.update({'name': 'default'}, {'$push': {'tasks': getSchema1(request, tags, dedalineobj)}})
 
+	def addTaskInCron(self, taskid):
+		self._dbdata.update({'_id': taskid}, {'$push': {'toycron': True}})
+
+	def getTasksFromCron(self):
+		return list(self._dbdata.find({'toycron': True}))	
+
 	def isEmptyTaskChain(self, id='default'):
 		tasks = self.getFromChain()
 		return True if tasks == None else False
@@ -115,7 +121,8 @@ class DB:
 		request = {'mark':'0'}
 		for data in before:
 			data['complete'] = '0'
-			self.appendinTS(request, data)
+			if 'toycron' in data and data['toycron'] == 'False':
+				self.appendinTS(request, data)
 		return list(self._dbdata.find({'deadline': {'$gt': datetime.datetime.now()}})\
 		                .sort('priority', pymongo.DESCENDING))
 

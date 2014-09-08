@@ -14,6 +14,8 @@ import random
 import os
 import datetime
 
+#Formats
+
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 DEBUG=True
@@ -66,6 +68,7 @@ def main():
 		''' Добавить в цепь задач'''
 		if 'AddChain' in request.form:
 			dbdata.addTaskInChain(request)
+			message = ''
 			return render_template('index.html', form=form)
 
 		if 'EndChain' in request.form:
@@ -106,6 +109,7 @@ def main():
 	dbdata.getAttachedTasks()
 	tasks = dbdata.tasks_by_deadline_priority()
 	fromchain = dbdata.getFromChain()
+	crontasks = dbdata.getTasksFromCron()
 	return render_template("index.html", form=form, sf=sf,
 		thisdate=datetime.datetime.now(),tasks=tasks,\
 		tags = tags, taskcount=len(tasks),\
@@ -129,7 +133,11 @@ def tag_info(tag=None):
 @app.route('/task_<idd>', methods=("GET", "POST"))
 def task_info(idd=None):
 	if request.method == 'POST':
-		if len(request.form['comment']) > 0:
+		req = request.form
+		if 'Every_strt' in req and 'dayarea' in req and req['dayarea'].isdigit():
+			dbdata.addTaskInCron(idd)
+			print("RESULT: ", int(req['dayarea']))
+		if len(req['comment']) > 0:
 			dbdata.appendData(idd, 'comments', request.form)
 		return redirect('task_{0}'.format(idd))
 	task = dbdata.find_by_id(idd)
@@ -219,7 +227,6 @@ if __name__ == '__main__':
 
 
 #Добавить стэк задач (новая задача, активируется, когда завершается текущая)
-#Добавить возможность повторения задач
 
 #Подсказка, сколько может занять задача
 
