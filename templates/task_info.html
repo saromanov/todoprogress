@@ -11,13 +11,16 @@
 </ol>
 
 <form action="" method="post">
-<legend> Информация о задаче: {{ task.task }} </legend>
+<legend> Настройки и информация о задаче: {{ task.task }} </legend>
 
-<p> Время начала задачи: {{ task.starttime }} </p>
-<p> Время завершения задачи: {{ task.deadline }} </p> <br><br>
+<p> Время начала задачи: {{ task.starttime }} </p> <input type="submit" name='Changestart' value="Изменить" class="btn btn-large btn-primary">
+<p> Время завершения задачи: {{ task.deadline }} </p> <input type="submit" name='Changedeadline' value="Изменить" class="btn btn-large btn-primary"> <br><br>
 
 <p> Описание задачи: </p> 
 <strong> {{ task.description }}</strong> <br><br>
+
+<p> Добавлять в планировщик данную задачу каждые <input type="text" name='dayarea' size=5> дней/дня </p>
+<input type="submit" name='Every_strt' value="Добавить" class="btn btn-large btn-primary">
 <p> Добавить комментарий </p>
 {{ forminfo.comment(rows=5, cols=50) }}
 <br><br>
