@@ -4,6 +4,7 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.feature_selection import SelectKBest
 from sklearn.naive_bayes import MultinomialNB, GaussianNB, BernoulliNB
 from sklearn.linear_model import Ridge, Lasso, LinearRegression
+from sklearn.cluster import KMeans
 import numpy as np
 import json
 import os
@@ -12,10 +13,21 @@ from util import numberToTime, strToTime, timeToNumber
 from datetime import timedelta
 import itertools
 
+import db
+
 def loadData(path):
+	'''
+		Load data from file. Probably only for test
+	'''
 	if not os.path.isfile(path):
 		raise IOError("File not found")
 	return json.loads(open(path).read())
+
+def loadDataFromMongo(dbdata):
+	'''
+		Load data from Mongodb if is exist
+	'''
+	tasks = dbdata.tasks()
 
 def prepareData(datajson, fields, param=None):
 	'''
@@ -41,12 +53,7 @@ def getData(request, fields):
 	'''
 		Clean and get data from task form
 	'''
-	result =[]
-	for f in fields:
-		if request[f] != None:
-			print(type(request[f]))
-			result.append(request[f])
-	return result
+	return list(filter(lambda x: request[x] != None, fields))
 
 #Split data on test set and train set
 
@@ -292,6 +299,13 @@ def make_clear_data(data):
 		for d in data]
 
 
+def clustering_tasks(X,y, cand):
+	if X == None or y == None:
+		raise Exception("Data is undefined")
+	kmeans = KMeans(init="k-means++", n_clusters=3, n_init=10).fit(X,y)
+	kmeans.predict(cand)
+
+
 def test_greedy():
 	import datetime
 	t1 = datetime.timedelta(hours=24)
@@ -304,8 +318,3 @@ def test_greedy():
 	prep, tolearn = prepare_to_greedy2(data)
 	getOptimalTime(tolearn)
 	#greedy_approach(data)
-
-
-
-
-
