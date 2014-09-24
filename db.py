@@ -115,7 +115,21 @@ class DB:
 	def tasks(self, *args, **kwargs):
 		return list(self._dbdata.find())
 
+	def pastTasks(self,*args,**kwargs):
+		return list(self._training.find())
+
 	def tasks_by_deadline_priority(self):
+		'''
+			Return most priority tasks
+		'''
+		self.storeBeforeDeadlineTasks()
+		return list(self._dbdata.find({'deadline': {'$gt': datetime.datetime.now()}})\
+		                .sort('priority', pymongo.DESCENDING))
+
+	def storeBeforeDeadlineTasks(self):
+		'''
+			Append past tasks in store, before the start
+		'''
 		ctasks = self.tasks()
 		before = list(filter(lambda x: isAfterDeadline(x['deadline']), ctasks))
 		request = {'mark':'0'}
@@ -123,8 +137,6 @@ class DB:
 			data['complete'] = '0'
 			if 'toycron' in data and data['toycron'] == 'False':
 				self.appendinTS(request, data)
-		return list(self._dbdata.find({'deadline': {'$gt': datetime.datetime.now()}})\
-		                .sort('priority', pymongo.DESCENDING))
 
 	def _tasks_before_deadline(self, tasksdata):
 		return tasksdata.find({'deadline': {'$gt': datetime.datetime.now()}}).sort('priority', pymongo.DESCENDING)
@@ -185,8 +197,11 @@ class DB:
 		return set(tags)
 
 
-	#Append in training set for predict optimal tasks
 	def appendinTS(self, request, data):
+		'''
+			Past tasks. Append in training set for predict optimal tasks
+			and for history
+		'''
 		schema = getSchema3(request, data)
 		self._training.insert(schema)
 

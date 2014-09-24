@@ -5,7 +5,7 @@ from pymongo import MongoClient
 from pymongo.errors import PyMongoError
 
 from learning import predict_success, Predict, getData, findOptimalTime, \
-planning_task_list, greedy_approach
+planning_task_list, greedy_approach, find_similar_name
 from util import *
 from models import *
 from db import DB
@@ -36,6 +36,10 @@ trash = db.trash
 dbdata = DB(db)
 #For complete task prepare to append in training set
 ct = []
+
+#Check tasks after deadline
+def pre_start():
+	dbdata.storeBeforeDeadlineTasks()
 
 
 @app.route("/", methods=("GET", "POST"))
@@ -105,6 +109,7 @@ def main():
 				message = message, value=alert)
 	
 	tags = dbdata.getTags()
+
 	#dbdata.removeChainById()
 	dbdata.getAttachedTasks()
 	tasks = dbdata.tasks_by_deadline_priority()
@@ -142,7 +147,8 @@ def task_info(idd=None):
 		return redirect('task_{0}'.format(idd))
 	task = dbdata.find_by_id(idd)
 	info = TaskInfoForm()
-	return render_template('task_info.html', task=task, forminfo=info)
+	similar = list(map(lambda x: x['task'], find_similar_name(task['task'])))
+	return render_template('task_info.html', task=task, forminfo=info, similar=similar)
 
 @app.route('/chain_<idd>', methods=("GET", "POST"))
 def chain_info(idd=None):
@@ -223,6 +229,7 @@ def login():
 #Предсказание оптимального времени выполнения задач
 if __name__ == '__main__':
 	Bootstrap(app)
+	pre_start()
 	app.run()
 
 

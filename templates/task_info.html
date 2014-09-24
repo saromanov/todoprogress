@@ -10,6 +10,12 @@
  <li><a href="/planning"> Планирование задач</a></li>
 </ol>
 
+
+<legend> Похожие задачи </legend>
+{% for sim in similar %}
+	<p> {{ sim }} </p>
+{% endfor %}
+
 <form action="" method="post">
 <legend> Настройки и информация о задаче: {{ task.task }} </legend>
 
