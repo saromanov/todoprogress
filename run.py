@@ -147,8 +147,11 @@ def task_info(idd=None):
 		return redirect('task_{0}'.format(idd))
 	task = dbdata.find_by_id(idd)
 	info = TaskInfoForm()
-	similar = list(map(lambda x: x['task'], find_similar_name(task['task'])))
-	return render_template('task_info.html', task=task, forminfo=info, similar=similar)
+	sim_tasks = find_similar_name(task['task'], dbdata=dbdata.pastTasks())
+	if sim_tasks != None:
+		similar = list(map(lambda x: x['task'], find_similar_name(task['task'])))
+		return render_template('task_info.html', task=task, forminfo=info, similar=similar)
+	return render_template('task_info.html', task=task, forminfo=info)
 
 @app.route('/chain_<idd>', methods=("GET", "POST"))
 def chain_info(idd=None):

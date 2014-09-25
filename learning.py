@@ -94,16 +94,27 @@ def find_similar_tasks(X, y):
 	result = ch.fit_transform(X_train, y)
 	return ch.fit_transform(X_train, y)
 
-def find_similar_name(target, data=None):
+def find_similar_name(target, *args, **kwargs):
 	'''
 		Get most similar names on current task from db
 		Simple compute count of identical words
 	'''
+
+	path = kwargs.get('data')
+	data = None
+	if path != None:
+		data = loadData(path)
+	dbdata = kwargs.get('dbdata')
+	if dbdata != None:
+		data = dbdata
+		print(data)
+		#print(list(map(lambda x: x['task'], data)))
+
 	if data == None:
-		data = loadData("../task_data.json")
+		return 
+
 	results = []
 	maxdiff = 0
-	print("TARGET: ", target)
 	splitter = target.lower().split()
 	for w in data.keys():
 		value = data[w]['task'].lower().split()
