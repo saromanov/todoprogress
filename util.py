@@ -180,7 +180,15 @@ def getRemoveMessage(count):
 	return REMOVE_MESSAGE.format('а','а') if count == 2 else \
 		   REMOVE_MESSAGE.format('и', 'ы')
 
-
-
-
-
+def tasknameToPretty(taskname):
+	""" From task name input to pretty format """
+	if len(taskname) == 0:
+		return []
+	dropSymbols = ['.',':',',','+','-','!','?']
+	result = taskname.lower().split()
+	def drops(data):
+		for symbol in dropSymbols:
+			if symbol in data:
+				data = data.replace(symbol,'')
+		return data
+	return list(map(lambda x: drops(x), result))

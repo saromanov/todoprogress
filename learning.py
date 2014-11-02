@@ -9,7 +9,7 @@ import numpy as np
 import json
 import os
 from math import log, sqrt
-from util import numberToTime, strToTime, timeToNumber
+from util import numberToTime, strToTime, timeToNumber, tasknameToPretty
 from datetime import timedelta
 import itertools
 
@@ -103,30 +103,28 @@ def find_similar_name(target, *args, **kwargs):
 	path = kwargs.get('data')
 	data = None
 	if path != None:
-		data = loadData(path)
+		data = loadData(path).keys()
 	dbdata = kwargs.get('dbdata')
 	if dbdata != None:
 		data = dbdata
-		print(data)
-		#print(list(map(lambda x: x['task'], data)))
-
 	if data == None:
 		return 
 
 	results = []
 	maxdiff = 0
-	splitter = target.lower().split()
-	for w in data.keys():
-		value = data[w]['task'].lower().split()
+	splitter = tasknameToPretty(target)
+	print("THIS IS SPLITTER: ", splitter)
+	for w in data:
+		value = w['task'].lower().split()
 		result = value + splitter
 		old = len(result)
 		diff = old - len(set(result))
 		if diff > maxdiff:
 			maxdiff = diff
 			results = []
-			results.append(data[w])
+			results.append(w)
 		if maxdiff != 0 and diff == maxdiff:
-			results.append(data[w])
+			results.append(w)
 	return results
 
 

@@ -141,15 +141,14 @@ def task_info(idd=None):
 		req = request.form
 		if 'Every_strt' in req and 'dayarea' in req and req['dayarea'].isdigit():
 			dbdata.addTaskInCron(idd)
-			print("RESULT: ", int(req['dayarea']))
 		if len(req['comment']) > 0:
 			dbdata.appendData(idd, 'comments', request.form)
 		return redirect('task_{0}'.format(idd))
 	task = dbdata.find_by_id(idd)
 	info = TaskInfoForm()
 	sim_tasks = find_similar_name(task['task'], dbdata=dbdata.pastTasks())
-	if sim_tasks != None:
-		similar = list(map(lambda x: x['task'], find_similar_name(task['task'])))
+	if sim_tasks != None and len(sim_tasks) > 0:
+		similar = list(map(lambda x: (x['task'], x['complete']), sim_tasks))
 		return render_template('task_info.html', task=task, forminfo=info, similar=similar)
 	return render_template('task_info.html', task=task, forminfo=info)
 
