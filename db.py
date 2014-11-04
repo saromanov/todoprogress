@@ -135,9 +135,8 @@ class DB:
 		request = {'mark':'0'}
 		for data in before:
 			data['complete'] = '0'
-			if 'toycron' in data and data['toycron'] == 'False':
-				self.appendinTS(request, data)
-				self._dbdata.remove(data)
+			self.appendinTS(request, data)
+			self._dbdata.remove({'task': data['task']})
 
 	def _tasks_before_deadline(self, tasksdata):
 		return tasksdata.find({'deadline': {'$gt': datetime.datetime.now()}}).sort('priority', pymongo.DESCENDING)

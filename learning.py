@@ -94,6 +94,28 @@ def find_similar_tasks(X, y):
 	result = ch.fit_transform(X_train, y)
 	return ch.fit_transform(X_train, y)
 
+
+def hamming_distance_extended(current, baseword):
+	""" 
+		Extended version of Hamming distance, where every mismatch have a cost.
+		Mistmatching on the start or at the end of the word
+		have a lss cost, then mismatching in the center of the word
+		TODO: Добавить вариант со смещением слова
+	"""
+	longer_word = max(current, baseword)
+	short_word = min(current, baseword)
+	longer_length = len(longer_word)
+	distr = list(map(lambda x: x/longer_length if x <= longer_length/2 else 1 - (x/longer_length),\
+		range(1,longer_length+1)))
+	distr[-1] = distr[0]
+	score = 0
+	for pos, word in enumerate(longer_word):
+		if pos >= len(short_word):
+			return abs(score)/len(longer_word)
+		if word != short_word[pos]:
+			score += abs(distr[pos])
+	return abs(score)/len(longer_word)
+
 def find_similar_name(target, *args, **kwargs):
 	'''
 		Get most similar names on current task from db
@@ -113,7 +135,7 @@ def find_similar_name(target, *args, **kwargs):
 	results = []
 	maxdiff = 0
 	splitter = tasknameToPretty(target)
-	print("THIS IS SPLITTER: ", splitter)
+	print("DATA LENGTH: ", len(data))
 	for w in data:
 		value = w['task'].lower().split()
 		result = value + splitter

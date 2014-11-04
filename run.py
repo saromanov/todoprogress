@@ -93,11 +93,19 @@ def main():
 			data = request.form
 			for value in data:
 				if value != 'Work':
+					#Need to remove this part
 					setwork = lambda x,value: dbdata.updateTask(value, 'isworking', x)
 					if dbdata.isWorking(value):
 						setwork(False,value)
 					else:
 						setwork(True,value)
+			return render_template('index.html', form=form)
+
+		#Закончить работать над задачей
+		if 'StopWork' in request.form:
+			for value in request.form:
+				if value != 'Work':
+					dbdata.updateTask(value, 'isworking', False)
 			return render_template('index.html', form=form)
 			
 		elif 'Remove' in request.form:
@@ -147,6 +155,7 @@ def task_info(idd=None):
 	task = dbdata.find_by_id(idd)
 	info = TaskInfoForm()
 	sim_tasks = find_similar_name(task['task'], dbdata=dbdata.pastTasks())
+	print("SIMILAR TASKS: ", sim_tasks)
 	if sim_tasks != None and len(sim_tasks) > 0:
 		similar = list(map(lambda x: (x['task'], x['complete']), sim_tasks))
 		return render_template('task_info.html', task=task, forminfo=info, similar=similar)
