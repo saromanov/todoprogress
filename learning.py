@@ -135,7 +135,6 @@ def find_similar_name(target, *args, **kwargs):
 	results = []
 	maxdiff = 0
 	splitter = tasknameToPretty(target)
-	print("DATA LENGTH: ", len(data))
 	for w in data:
 		value = w['task'].lower().split()
 		result = value + splitter

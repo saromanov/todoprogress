@@ -153,12 +153,13 @@ def task_info(idd=None):
 			dbdata.appendData(idd, 'comments', request.form)
 		return redirect('task_{0}'.format(idd))
 	task = dbdata.find_by_id(idd)
-	info = TaskInfoForm()
-	sim_tasks = find_similar_name(task['task'], dbdata=dbdata.pastTasks())
-	print("SIMILAR TASKS: ", sim_tasks)
-	if sim_tasks != None and len(sim_tasks) > 0:
-		similar = list(map(lambda x: (x['task'], x['complete']), sim_tasks))
-		return render_template('task_info.html', task=task, forminfo=info, similar=similar)
+	if task != None:
+		info = TaskInfoForm()
+		print(len(dbdata.pastTasks()))
+		sim_tasks = find_similar_name(task['task'], dbdata=dbdata.pastTasks())
+		if sim_tasks != None and len(sim_tasks) > 0:
+			similar = list(map(lambda x: (x['task'], x['complete']), sim_tasks))
+			return render_template('task_info.html', task=task, forminfo=info, similar=similar)
 	return render_template('task_info.html', task=task, forminfo=info)
 
 @app.route('/chain_<idd>', methods=("GET", "POST"))
@@ -228,7 +229,9 @@ def task():
 				dbdata.removeTasks([comptask['task']])
 			return redirect('/')
 	bff = BeforeTaskForm()
-	ct.append(dbdata.find_by_name(session['taskname'])[0])
+	current = dbdata.find_by_name(session['taskname'])
+	if current != None and len(current) > 0:
+		ct.append(current)
 	return render_template('task.html', form=bff, taskname=session['taskname'])
 
 @app.route('/login', methods=("GET", "POST"))

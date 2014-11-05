@@ -146,10 +146,13 @@ class DB:
 			x['complete'] == 0 else None, self.tasks()))
 
 	def find_by_name(self, name):
-		return self._find('name', name)
+		return self._findOne('task', name)
 
 	def find_by_id(self, idvalue):
 		return self._dbdata.find_one({'id': idvalue})
+
+	def _findOne(self, field, value):
+		return self._dbdata.find_one({field: value})
 
 	def _find(self, field, data):
 		return list(self._dbdata.find({field: data}).sort(field))
