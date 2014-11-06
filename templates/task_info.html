@@ -13,7 +13,16 @@
 
 <legend> Похожие задачи </legend>
 {% for sim in similar %}
-	<p> {{ sim }} </p>
+	{% if sim[1] == '1' %}
+		<span style="color: green">
+			<a href=task_{{ sim[2]}}> {{ sim[0] }} </a>
+		</span>
+	{% else %}
+		<span style="color: red">
+			<a href=task_{{ sim[2]}}> {{ sim[0] }} </a>
+		</span>
+
+	{% endif %}
 {% endfor %}
 
 <form action="" method="post">

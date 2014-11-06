@@ -76,6 +76,8 @@ def predict_success(X, y, pred_value, threshold):
 	True if Regression(X, y, pred_value) >= threshold else False
 
 
+
+
 #Find similar tasks
 def find_similar_tasks(X, y):
 	'''
@@ -95,6 +97,33 @@ def find_similar_tasks(X, y):
 	return ch.fit_transform(X_train, y)
 
 
+#Load data for compare task names
+def loadTasks(data):
+	result = None
+	if 'data' in data:
+		result = loadData(path).keys()
+	if 'dbdata' in data:
+		return data['dbdata']	
+	if result == None:
+		return 
+
+def hamming_distance_loop(current, base):
+	"""
+		current - target taskname
+		base - optimal task
+		all in the list format
+	"""
+
+	#Prepare operation - remove all words with length 1 or 2
+	#Probably need to remove
+	prepared = lambda word: filter(lambda x: len(x) > 2, word)
+	result = .0
+	value1 = list(prepared(current))
+	value2 = list(prepared(base))
+	for word1,word2 in zip(value1, value2):
+		result += hamming_distance_extended(word1, word2)
+	return result
+
 def hamming_distance_extended(current, baseword):
 	""" 
 		Extended version of Hamming distance, where every mismatch have a cost.
@@ -108,7 +137,7 @@ def hamming_distance_extended(current, baseword):
 	distr = list(map(lambda x: x/longer_length if x <= longer_length/2 else 1 - (x/longer_length),\
 		range(1,longer_length+1)))
 	distr[-1] = distr[0]
-	score = 0
+	score = .0
 	for pos, word in enumerate(longer_word):
 		if pos >= len(short_word):
 			return abs(score)/len(longer_word)
@@ -121,22 +150,15 @@ def find_similar_name(target, *args, **kwargs):
 		Get most similar names on current task from db
 		Simple compute count of identical words
 	'''
-
-	path = kwargs.get('data')
-	data = None
-	if path != None:
-		data = loadData(path).keys()
-	dbdata = kwargs.get('dbdata')
-	if dbdata != None:
-		data = dbdata
-	if data == None:
-		return 
-
+	data = loadTasks(kwargs)
+	if data == None: return []
 	results = []
 	maxdiff = 0
 	splitter = tasknameToPretty(target)
 	for w in data:
 		value = w['task'].lower().split()
+		#Добавить к общему сравнению
+		hamming = hamming_distance_loop(splitter, value)
 		result = value + splitter
 		old = len(result)
 		diff = old - len(set(result))
@@ -144,6 +166,7 @@ def find_similar_name(target, *args, **kwargs):
 			maxdiff = diff
 			results = []
 			results.append(w)
+			continue
 		if maxdiff != 0 and diff == maxdiff:
 			results.append(w)
 	return results
