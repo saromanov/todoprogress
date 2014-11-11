@@ -42,10 +42,9 @@ class DB:
 		dedalineobj = deadline.obj
 		if request.form['attached'] == 'no':
 			self._dbdata.insert(getSchema1(request, tags, dedalineobj))
-			return deadline
-		else:
-			self._attached.insert(getSchema2(request))
-			return deadline
+		else: self._attached.insert(getSchema2(request))
+
+		return deadline
 
 	def addTaskInChain(self, request):
 		'''
@@ -149,6 +148,8 @@ class DB:
 		return self._findOne('task', name)
 
 	def find_by_id(self, idvalue):
+		if len(idvalue) == 24:
+			return self._training.find_one({'_id': ObjectId(idvalue)})
 		return self._dbdata.find_one({'id': idvalue})
 
 	def _findOne(self, field, value):

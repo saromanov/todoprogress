@@ -15,13 +15,14 @@
 {% for sim in similar %}
 	{% if sim[1] == '1' %}
 		<span style="color: green">
-			<a href=task_{{ sim[2]}}> {{ sim[0] }} </a>
+			<a href=task_{{ sim[2]}}> {{ sim[0]}} </a>
 		</span>
+		<br>
 	{% else %}
 		<span style="color: red">
-			<a href=task_{{ sim[2]}}> {{ sim[0] }} </a>
+			<a href=task_{{ sim[2]}}> {{ sim[0]}} </a>
 		</span>
-
+		<br>
 	{% endif %}
 {% endfor %}
 

@@ -158,6 +158,7 @@ def task_info(idd=None):
 		sim_tasks = find_similar_name(task['task'], dbdata=dbdata.pastTasks())
 		if sim_tasks != None and len(sim_tasks) > 0:
 			similar = list(map(lambda x: (x['task'], x['complete'], x['_id']), sim_tasks))
+			print("THIS IS SIMILAR: ", similar)
 			return render_template('task_info.html', task=task, forminfo=info, similar=similar)
 	info = TaskInfoForm()
 	return render_template('task_info.html', task=task, forminfo=info)
