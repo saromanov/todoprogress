@@ -46,7 +46,12 @@ def getSchema3(request, data):
 				'time': differenceToMinute(data['starttime']),\
 				'mark': '0' if request['mark']=='' else request['mark'],
 				'complete': data['complete'],
-				'starttime': timeToNumber(data['starttime'])
+				'starttime': timeToNumber(data['starttime']),
+				'date': data['date'],
+				'description': data['description'],
+				'worktime': data['worktime'],
+				'startworktime': data['startworktime']
+
 			}
 
 

@@ -137,6 +137,10 @@ class DB:
 			self.appendinTS(request, data)
 			self._dbdata.remove({'task': data['task']})
 
+	def storeCompleteTask(self, task):
+		""" Store complate user task(after deadline) """
+		print("THIS IS MY TASK: ", task)
+
 	def _tasks_before_deadline(self, tasksdata):
 		return tasksdata.find({'deadline': {'$gt': datetime.datetime.now()}}).sort('priority', pymongo.DESCENDING)
 

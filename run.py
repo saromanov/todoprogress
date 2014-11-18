@@ -78,8 +78,11 @@ def main():
 		if 'EndChain' in request.form:
 			dbdata.endTaskFromChain(request.form)
 
-		#a little "survey" after completion of task. Of course, need for prediction
 		if 'Complete' in request.form:
+			""" 
+			Complete task append to store 
+			a little "survey" after completion of task. Of course, need for prediction
+			"""
 			data = list(request.form.keys())
 			if len(data) == 1:
 				return redirect('/')
