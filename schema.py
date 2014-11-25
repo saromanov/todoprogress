@@ -50,7 +50,9 @@ def getSchema3(request, data):
 				'date': data['date'],
 				'description': data['description'],
 				'worktime': data['worktime'],
-				'startworktime': data['startworktime']
+				'startworktime': timeToNumber(data['startworktime']),
+				'tags': data['tags'],
+				'deadline': data['deadline']
 
 			}
 

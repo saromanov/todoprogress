@@ -49,6 +49,15 @@ def prepareData(datajson, fields, param=None):
 	return X,y
 
 
+def getTargetFields(data, fields):
+	""" Return only data from target fields 
+		data in format key-value
+	"""
+	return [list(map(lambda x:data[train][x], \
+		filter(lambda x: x in fields, data[train]))) \
+		for train in data]
+
+
 def getData(request, fields):
 	'''
 		Clean and get data from task form
@@ -155,6 +164,7 @@ def find_similar_name(target, *args, **kwargs):
 	results = []
 	maxdiff = 0
 	splitter = tasknameToPretty(target)
+	print(target)
 	for w in data:
 		value = w['task'].lower().split()
 		#Добавить к общему сравнению
@@ -222,13 +232,19 @@ def gaussianPredict(fields, target_data, cand):
 	return predvalue
 
 
-def Predict(fields, targ_field, cand):
+def Predict(fields, targ_field, cand, traindata):
 	'''
 		TODO: Return list of similar tasks
 	'''
+	#Just for test
+	#Analysis for tags and for task title
 	data = loadData("../task_data.json")
-	X, y = prepareData(data, fields, targ_field)
-	return gaussianPredict(X, y, cand)
+	#Fix to 10
+	if len(traindata) > 2:
+		string_data = getTargetFields(data,['task', 'tags'])
+		print(string_data, ...)
+		X, y = prepareData(data, fields, targ_field)
+		return gaussianPredict(X, y, cand)
 
 #Find optimal time for success this task
 def findOptimalTime(fields, target, cand):

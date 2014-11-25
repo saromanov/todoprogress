@@ -56,9 +56,12 @@ def main():
 			alert = "alert alert-success"
 			message = "Задача добавлена в список"
 			targetFields = ["starttime", "time", "type"]
-			'''result = Predict(targetFields, "complete", \
-				[timeToNumber(isadded.obj), 5, typeToNumber(request.form["type_of_task"])])
-			if result == 0 and timeToNumber(request.form['starttime']) != result:
+			result = Predict(targetFields, "complete", \
+				[timeToNumber(isadded.obj), 5, typeToNumber(request.form["type_of_task"])],\
+				dbdata.loadTrainData())
+
+			print("THIS IS RESULT FOR PREDICT, ...", result)
+			'''if result == 0 and timeToNumber(request.form['starttime']) != result:
 				alert = "alert alert-success"
 				rec_time = findOptimalTime(targetFields, \
 					[int(request.form["deadline"]) * 60,typeToNumber(request.form["type_of_task"])],

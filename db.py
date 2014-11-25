@@ -172,8 +172,9 @@ class DB:
 				self._storeToTrash(self.find_by_name(t))
 				self._dbdata.remove({'task': t})
 
-	def removeAll(self):
-		self._dbdata.remove()
+	def removeAll(self, dbname):
+		if dbname == 'dbdata':self._dbdata.remove()
+		elif dbname == 'training': self._training.remove()
 
 	def _storeToTrash(self, tasksdata):
 		result = self._dbdata.find_one({'task': tasksdata})
@@ -184,8 +185,8 @@ class DB:
 	def fromTrash(self):
 		return list(self._trash.find())
 
-	def loadTrainData(self, traindb):
-		return list(traindb.find())
+	def loadTrainData(self):
+		return list(self._training.find())
 
 	#Get tasks by tag
 	def getByTag(self, tag):
